@@ -1,6 +1,5 @@
 package pl.maxmati.po.automaton.neighborhood;
 
-import com.google.common.base.Objects;
 import pl.maxmati.po.automaton.coordinates.CellCoordinates;
 import pl.maxmati.po.automaton.coordinates.Cords2D;
 import pl.maxmati.po.automaton.exceptions.NotSupportedCellCoordinates;
@@ -37,21 +36,6 @@ public class MooreNeighborhood implements CellNeighborhood {
 
     @Override
     public String toString() {
-        return "MooreNeighborhood{" +
-                "radius=" + radius +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof MooreNeighborhood)) return false;
-        MooreNeighborhood that = (MooreNeighborhood) o;
-        return Objects.equal(radius, that.radius);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(radius);
+        return "MooreNeighborhood{" + radius + '}';
     }
 }

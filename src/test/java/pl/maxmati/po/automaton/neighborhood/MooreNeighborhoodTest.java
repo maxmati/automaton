@@ -79,4 +79,11 @@ public class MooreNeighborhoodTest {
         assertEquals(expected, neighborhood);
 
     }
+
+    @Test
+    public void testToString() throws Exception {
+        MooreNeighborhood neighborhood = new MooreNeighborhood(3);
+
+        assertEquals("MooreNeighborhood{3}", neighborhood.toString());
+    }
 }
