@@ -1,9 +1,8 @@
-package pl.maxmati.po.automaton;
+package pl.maxmati.po.automaton.state.factory;
 
 import org.junit.Test;
 import pl.maxmati.po.automaton.coordinates.Cords2D;
 import pl.maxmati.po.automaton.state.BinaryState;
-import pl.maxmati.po.automaton.state.factory.UniformStateFactory;
 
 import static org.junit.Assert.assertEquals;
 
@@ -30,4 +29,9 @@ public class UniformStateFactoryTest {
                         BinaryState.DEAD, factory.initialState(new Cords2D(i, j)));
     }
 
+    @Test
+    public void testToString() throws Exception {
+        UniformStateFactory stateFactory = new UniformStateFactory(BinaryState.ALIVE);
+        assertEquals("UniformStateFactory{ALIVE}", stateFactory.toString());
+    }
 }

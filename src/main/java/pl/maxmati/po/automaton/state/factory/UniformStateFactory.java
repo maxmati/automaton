@@ -1,6 +1,5 @@
 package pl.maxmati.po.automaton.state.factory;
 
-import com.google.common.base.Objects;
 import pl.maxmati.po.automaton.coordinates.CellCoordinates;
 import pl.maxmati.po.automaton.state.CellState;
 
@@ -22,18 +21,5 @@ public class UniformStateFactory implements CellStateFactory {
     @Override
     public String toString() {
         return "UniformStateFactory{" + state + '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof UniformStateFactory)) return false;
-        UniformStateFactory that = (UniformStateFactory) o;
-        return Objects.equal(state, that.state);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(state);
     }
 }
