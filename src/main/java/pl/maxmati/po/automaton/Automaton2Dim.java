@@ -25,8 +25,7 @@ public abstract class Automaton2Dim extends Automaton {
             Cords2D cords = calculateNextCords( (Cords2D) coordinates );
             return areCordsValid(cords);
         }else {
-            //TODO: error
-            return false;
+            throw new NotSupportedCellCoordinates();
         }
     }
 
@@ -40,14 +39,12 @@ public abstract class Automaton2Dim extends Automaton {
         if(coordinates instanceof Cords2D){
             Cords2D cords = calculateNextCords( (Cords2D) coordinates );
             if(!areCordsValid(cords)){
-                //TODO: error
                 return null;
             }
             return cords;
 
         }else {
-            //TODO: error
-            return null;
+            throw new NotSupportedCellCoordinates();
         }
     }
 
