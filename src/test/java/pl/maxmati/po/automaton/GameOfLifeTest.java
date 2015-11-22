@@ -3,12 +3,11 @@ package pl.maxmati.po.automaton;
 import org.junit.Test;
 import pl.maxmati.po.automaton.coordinates.Cords2D;
 import pl.maxmati.po.automaton.state.BinaryState;
-import pl.maxmati.po.automaton.state.CellState;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static pl.maxmati.po.automaton.AutomatonTestingUtils.compareAutomatonWithStateArray;
 
 /**
  * Created by maxmati on 11/20/15
@@ -137,26 +136,6 @@ public class GameOfLifeTest {
             }
         }
         return struct;
-    }
-
-    private void compareAutomatonWithStateArray(Automaton a, CellState[][] state, String message){
-        boolean hitArray[][] = new boolean[state.length][state[0].length];
-        for(Cell c: a){
-            if(!(c.cords instanceof Cords2D))
-                fail("Cell cords should be instance of Cords2D " + message);
-            Cords2D cords = (Cords2D) c.cords;
-            assertEquals(String.format("Wrong state for [%d,%d] ",cords.x,cords.y) + message,
-                    state[cords.y][cords.x], c.state);
-            assertFalse(String.format("Double state for [%d,%d] ",cords.x,cords.y) + message,
-                    hitArray[cords.y][cords.x]);
-            hitArray[cords.y][cords.x] = true;
-        }
-
-        for (int y = 0; y < hitArray.length; y++) {
-            for (int x = 0; x < hitArray[y].length; x++) {
-                assertTrue(String.format("Missing state for [%d,%d] ",x,y) + message, hitArray[y][x]);
-            }
-        }
     }
 
 }
