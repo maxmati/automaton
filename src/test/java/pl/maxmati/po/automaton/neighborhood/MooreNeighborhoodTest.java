@@ -23,6 +23,26 @@ public class MooreNeighborhoodTest {
     }
 
     @Test
+    public void testRadius1Center0And2Size4by3Wrap(){
+        MooreNeighborhood mooreNeighborhood = new MooreNeighborhood(1, true, 4, 3);
+        Set<CellCoordinates> neighbors = mooreNeighborhood.cellNeighbors(new Cords2D(0,2));
+
+        Set<CellCoordinates> expected = new HashSet<>();
+        expected.add(new Cords2D(3, 1));
+        expected.add(new Cords2D(0, 1));
+        expected.add(new Cords2D(1, 1));
+
+        expected.add(new Cords2D(3, 2));
+        expected.add(new Cords2D(1, 2));
+
+        expected.add(new Cords2D(3, 0));
+        expected.add(new Cords2D(0, 0));
+        expected.add(new Cords2D(1, 0));
+
+        assertEquals(expected, neighbors);
+    }
+
+    @Test
     public void testRadius1Center3And5(){
         MooreNeighborhood mooreNeighborhood = new MooreNeighborhood(1);
 

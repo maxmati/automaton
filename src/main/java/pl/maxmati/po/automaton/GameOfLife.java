@@ -14,8 +14,12 @@ import java.util.Set;
  */
 public class GameOfLife extends Automaton2Dim {
 
-    public GameOfLife(int width, int height){
-        this(new MooreNeighborhood(1), new UniformStateFactory(BinaryState.DEAD), width, height);
+    public GameOfLife(int width, int height) {
+        this(width, height, false);
+    }
+
+    public GameOfLife(int width, int height, boolean wrap){
+        this(new MooreNeighborhood(1, wrap, width, height), new UniformStateFactory(BinaryState.DEAD), width, height);
 
     }
 
