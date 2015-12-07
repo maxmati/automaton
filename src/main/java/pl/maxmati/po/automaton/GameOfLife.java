@@ -7,6 +7,9 @@ import pl.maxmati.po.automaton.state.CellState;
 import pl.maxmati.po.automaton.state.factory.CellStateFactory;
 import pl.maxmati.po.automaton.state.factory.UniformStateFactory;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -14,17 +17,27 @@ import java.util.Set;
  */
 public class GameOfLife extends Automaton2Dim {
 
+    private final Set<Integer> survive;
+    private final Set<Integer> born;
+
     public GameOfLife(int width, int height) {
         this(width, height, false);
     }
 
     public GameOfLife(int width, int height, boolean wrap){
-        this(new MooreNeighborhood(1, wrap, width, height), new UniformStateFactory(BinaryState.DEAD), width, height);
-
+        this(width, height, wrap, new HashSet<>(Arrays.asList(2, 3)), new HashSet<>(Collections.singletonList(3)));
     }
 
-    private GameOfLife(CellNeighborhood neighborhoodStrategy, CellStateFactory stateFactory, int width, int height) {
+    public GameOfLife(int width, int height, boolean wrap, Set<Integer> survive, Set<Integer> born){
+        this(new MooreNeighborhood(1, wrap, width, height), new UniformStateFactory(BinaryState.DEAD), width, height, survive, born);
+    }
+
+    private GameOfLife(CellNeighborhood neighborhoodStrategy, CellStateFactory stateFactory, int width, int height, Set<Integer> survive, Set<Integer> born) {
         super(neighborhoodStrategy, stateFactory, width, height);
+
+        this.survive = survive;
+        this.born = born;
+
         for(Automaton.CellIterator iterator = this.cellIterator(); iterator.hasNext();){
             Cell cell = iterator.next();
             iterator.setState(stateFactory.initialState(cell.cords));
@@ -33,11 +46,22 @@ public class GameOfLife extends Automaton2Dim {
 
     @Override
     protected Automaton newInstance(CellStateFactory stateFactory, CellNeighborhood neighborhood) {
-        return new GameOfLife(neighborhood,stateFactory, this.width, this.height);
+        return new GameOfLife(neighborhood,stateFactory, this.width, this.height, survive, born);
     }
 
     @Override
     protected CellState newCellState(Cell currentState, Set<Cell> neighborsCells) {
+        int aliveCount = countAlive(neighborsCells);
+        if ((currentState.state == BinaryState.ALIVE && survive.contains(aliveCount)) ||
+                currentState.state == BinaryState.DEAD && born.contains(aliveCount))
+        {
+            return BinaryState.ALIVE;
+        } else {
+            return BinaryState.DEAD;
+        }
+    }
+
+    private int countAlive(Set<Cell> neighborsCells) {
         int aliveCount = 0;
         for (Cell cell : neighborsCells) {
             if (cell.state instanceof BinaryState) {
@@ -46,11 +70,7 @@ public class GameOfLife extends Automaton2Dim {
                     ++aliveCount;
             }
         }
-        if (aliveCount == 3 || (aliveCount == 2 && currentState.state == BinaryState.ALIVE)){
-            return BinaryState.ALIVE;
-        } else {
-            return BinaryState.DEAD;
-        }
+        return aliveCount;
     }
 
     @Override

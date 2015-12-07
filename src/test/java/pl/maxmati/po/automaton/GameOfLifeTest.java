@@ -4,8 +4,7 @@ import org.junit.Test;
 import pl.maxmati.po.automaton.coordinates.Cords2D;
 import pl.maxmati.po.automaton.state.BinaryState;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static pl.maxmati.po.automaton.AutomatonTestingUtils.compareAutomatonWithStateArray;
 
@@ -69,6 +68,31 @@ public class GameOfLifeTest {
             {0, 0, 0, 0, 0, 0},
             {1, 0, 1, 0, 1, 0}
     };
+
+
+    private static final int[][][] B3678S34678RULE_TESTDATA = {
+            {
+                    {1, 0, 1, 0, 1, 0},
+                    {0, 1, 0, 1, 0, 1},
+                    {0, 0, 0, 0, 0, 0},
+                    {1, 0, 1, 0, 1, 0}
+            },
+            {
+                    {0, 1, 0, 1, 0, 0},
+                    {0, 0, 1, 0, 1, 0},
+                    {0, 1, 1, 1, 1, 0},
+                    {0, 0, 0, 0, 0, 0}
+            }
+    };
+
+    @Test public void testB3678S34678Rule(){
+        Automaton a = new GameOfLife(6, 4, false, new HashSet<>(Arrays.asList(3,4,6,7,8)), new HashSet<>(Arrays.asList(3,6,7,8)));
+        a.insertStructure(generateBinaryStateStruct(B3678S34678RULE_TESTDATA[0]));
+
+        a = a.nextState();
+
+        compareAutomatonWithStateArray(a, generateBinaryStateArray(B3678S34678RULE_TESTDATA[1]), a.toString());
+    }
 
     @Test
     public void testInitialization(){
