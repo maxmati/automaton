@@ -1,5 +1,6 @@
-package pl.maxmati.po.automaton;
+package pl.maxmati.po.automaton.automaton;
 
+import pl.maxmati.po.automaton.Cell;
 import pl.maxmati.po.automaton.coordinates.CellCoordinates;
 import pl.maxmati.po.automaton.neighborhood.CellNeighborhood;
 import pl.maxmati.po.automaton.state.CellState;

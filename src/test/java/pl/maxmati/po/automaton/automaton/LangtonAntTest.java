@@ -1,4 +1,4 @@
-package pl.maxmati.po.automaton;
+package pl.maxmati.po.automaton.automaton;
 
 import org.junit.Test;
 import pl.maxmati.po.automaton.coordinates.Cords2D;
@@ -7,7 +7,7 @@ import pl.maxmati.po.automaton.state.LangtonCellState;
 import java.util.HashMap;
 import java.util.Map;
 
-import static pl.maxmati.po.automaton.AutomatonTestingUtils.compareAutomatonWithStateArray;
+import static pl.maxmati.po.automaton.automaton.AutomatonTestingUtils.compareAutomatonWithStateArray;
 
 /**
  * Created by maxmati on 11/23/15.

@@ -1,4 +1,4 @@
-package pl.maxmati.po.automaton;
+package pl.maxmati.po.automaton.automaton;
 
 /**
  * Created by maxmati on 11/22/15

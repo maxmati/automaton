@@ -1,5 +1,6 @@
-package pl.maxmati.po.automaton;
+package pl.maxmati.po.automaton.automaton;
 
+import pl.maxmati.po.automaton.Cell;
 import pl.maxmati.po.automaton.coordinates.Cords2D;
 import pl.maxmati.po.automaton.neighborhood.CellNeighborhood;
 import pl.maxmati.po.automaton.neighborhood.VonNeumanNeighborhood;

@@ -1,4 +1,4 @@
-package pl.maxmati.po.automaton;
+package pl.maxmati.po.automaton.automaton;
 
 import org.junit.Test;
 import pl.maxmati.po.automaton.coordinates.Cords2D;
@@ -7,9 +7,7 @@ import pl.maxmati.po.automaton.state.WireWorldState;
 import java.util.HashMap;
 import java.util.Map;
 
-import static pl.maxmati.po.automaton.AutomatonTestingUtils.compareAutomatonWithStateArray;
-import static pl.maxmati.po.automaton.WireWorldTestData.DIODES;
-import static pl.maxmati.po.automaton.WireWorldTestData.WIRE;
+import static pl.maxmati.po.automaton.automaton.AutomatonTestingUtils.compareAutomatonWithStateArray;
 
 /**
  * Created by maxmati on 11/22/15
@@ -18,21 +16,21 @@ public class WireWorldTest {
 
     @Test
     public void testWire(){
-        Automaton a = createWireWorldWithState(WIRE[0]);
+        Automaton a = createWireWorldWithState(WireWorldTestData.WIRE[0]);
 
-        for(int i = 1; i < WIRE.length; ++i){
+        for(int i = 1; i < WireWorldTestData.WIRE.length; ++i){
             a = a.nextState();
-            compareAutomatonWithStateArray(a, generateWireWorldStateArray(WIRE[i]), String.format("on tick %d.", i));
+            compareAutomatonWithStateArray(a, generateWireWorldStateArray(WireWorldTestData.WIRE[i]), String.format("on tick %d.", i));
         }
     }
 
     @Test
     public void testDiodes(){
-        Automaton a = createWireWorldWithState(DIODES[0]);
+        Automaton a = createWireWorldWithState(WireWorldTestData.DIODES[0]);
 
-        for (int i = 1; i < DIODES.length; i++) {
+        for (int i = 1; i < WireWorldTestData.DIODES.length; i++) {
             a = a.nextState();
-            compareAutomatonWithStateArray(a, generateWireWorldStateArray(DIODES[i]), String.format("on tick %d", i));
+            compareAutomatonWithStateArray(a, generateWireWorldStateArray(WireWorldTestData.DIODES[i]), String.format("on tick %d", i));
         }
     }
 
