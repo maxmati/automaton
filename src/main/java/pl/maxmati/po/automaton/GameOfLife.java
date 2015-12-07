@@ -37,7 +37,7 @@ public class GameOfLife extends Automaton2Dim {
     }
 
     @Override
-    protected CellState newCellState(CellState currentState, Set<Cell> neighborsCells) {
+    protected CellState newCellState(Cell currentState, Set<Cell> neighborsCells) {
         int aliveCount = 0;
         for (Cell cell : neighborsCells) {
             if (cell.state instanceof BinaryState) {
@@ -46,7 +46,7 @@ public class GameOfLife extends Automaton2Dim {
                     ++aliveCount;
             }
         }
-        if (aliveCount == 3 || (aliveCount == 2 && currentState == BinaryState.ALIVE)){
+        if (aliveCount == 3 || (aliveCount == 2 && currentState.state == BinaryState.ALIVE)){
             return BinaryState.ALIVE;
         } else {
             return BinaryState.DEAD;

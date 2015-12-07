@@ -29,11 +29,11 @@ public class WireWorld extends Automaton2Dim {
     }
 
     @Override
-    protected CellState newCellState(CellState currentState, Set<Cell> neighborsStates) {
-        if(!(currentState instanceof WireWorldState)){
+    protected CellState newCellState(Cell currentState, Set<Cell> neighborsStates) {
+        if(!(currentState.state instanceof WireWorldState)){
             throw new NotSupportedCellState();
         }
-        WireWorldState state = (WireWorldState) currentState;
+        WireWorldState state = (WireWorldState) currentState.state;
         switch (state){
             case VOID:
                 return WireWorldState.VOID;
