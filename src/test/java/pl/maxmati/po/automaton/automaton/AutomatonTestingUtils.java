@@ -2,6 +2,7 @@ package pl.maxmati.po.automaton.automaton;
 
 import pl.maxmati.po.automaton.Cell;
 import pl.maxmati.po.automaton.automaton.Automaton;
+import pl.maxmati.po.automaton.coordinates.Cords1D;
 import pl.maxmati.po.automaton.coordinates.Cords2D;
 import pl.maxmati.po.automaton.state.CellState;
 
@@ -12,17 +13,30 @@ import static org.junit.Assert.*;
  */
 public class AutomatonTestingUtils {
 
+    public static void compareAutomatonWithStateArray(Automaton a, CellState[] state, String message){
+        compareAutomatonWithStateArray(a, new CellState[][]{state}, message );
+    }
+
     public static void compareAutomatonWithStateArray(Automaton a, CellState[][] state, String message){
         boolean hitArray[][] = new boolean[state.length][state[0].length];
         for(Cell c: a){
-            if(!(c.cords instanceof Cords2D))
-                fail("Cell cords should be instance of Cords2D " + message);
-            Cords2D cords = (Cords2D) c.cords;
-            assertEquals(String.format("Wrong state for [%d,%d] ",cords.x,cords.y) + message,
-                    state[cords.y][cords.x], c.state);
-            assertFalse(String.format("Double state for [%d,%d] ",cords.x,cords.y) + message,
-                    hitArray[cords.y][cords.x]);
-            hitArray[cords.y][cords.x] = true;
+            if(!(c.cords instanceof Cords2D || c.cords instanceof Cords1D))
+                fail("Cell cords should be instance of Cords2D or Cords1D " + message);
+
+            final String wrongStateMessage = String.format("Wrong state for %s ", c.cords) + message;
+            final String doubleStateMessage = String.format("Double state for %s ", c.cords) + message;
+
+            int x, y;
+            if(c.cords instanceof Cords1D){
+                y = 0;
+                x = ((Cords1D) c.cords).x;
+            } else {
+                y = ((Cords2D) c.cords).y;
+                x = ((Cords2D) c.cords).x;
+            }
+            assertEquals(wrongStateMessage, state[y][x], c.state);
+            assertFalse(doubleStateMessage, hitArray[y][x]);
+            hitArray[y][x] = true;
         }
 
         for (int y = 0; y < hitArray.length; y++) {
