@@ -6,6 +6,13 @@ package pl.maxmati.po.automaton.state;
 public enum WireWorldState implements CellState{
     VOID, WIRE, HEAD, TAIL;
 
+    private static WireWorldState[] vals = values();
+
+    @Override
+    public CellState next(){
+        return vals[(this.ordinal() + 1) % vals.length];
+    }
+
     public static WireWorldState valueOf(int i) {
         switch (i){
             case 0:

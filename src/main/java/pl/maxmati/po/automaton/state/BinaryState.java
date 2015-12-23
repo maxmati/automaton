@@ -6,6 +6,13 @@ package pl.maxmati.po.automaton.state;
 public enum BinaryState implements CellState {
     DEAD, ALIVE;
 
+    private static BinaryState[] vals = values();
+
+    @Override
+    public CellState next(){
+        return vals[(this.ordinal() + 1) % vals.length];
+    }
+
     public static BinaryState valueOf(int i) {
         switch (i){
             case 0:

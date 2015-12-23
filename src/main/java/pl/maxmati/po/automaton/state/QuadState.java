@@ -6,6 +6,13 @@ package pl.maxmati.po.automaton.state;
 public enum QuadState implements CellState{
     DEAD, RED, YELLOW, BLUE, GREEN;
 
+    private static QuadState[] vals = values();
+
+    @Override
+    public CellState next(){
+        return vals[(this.ordinal() + 1) % vals.length];
+    }
+
     public static boolean isAlive(CellState state) {
         return state != DEAD;
     }

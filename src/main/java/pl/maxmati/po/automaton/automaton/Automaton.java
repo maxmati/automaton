@@ -68,11 +68,11 @@ public abstract class Automaton implements Iterable<Cell>{
         return cells;
     }
 
-    private CellState mapCoordinate(CellCoordinates cord){
+    protected CellState mapCoordinate(CellCoordinates cord){
         return cells.get(cord);
     }
 
-    private void setCellState(CellCoordinates cord, CellState state){
+    protected void setCellState(CellCoordinates cord, CellState state){
         this.cells.put(cord, state);
     }
 
@@ -82,6 +82,10 @@ public abstract class Automaton implements Iterable<Cell>{
                 "neighborhoodStrategy=" + neighborhoodStrategy + '\n' +
                 "stateFactory=" + stateFactory + '\n' +
                 stringifyCells();
+    }
+
+    public void switchCell(CellCoordinates cords){
+        setCellState(cords, mapCoordinate(cords).next());
     }
 
     public class CellIterator implements Iterator<Cell> {

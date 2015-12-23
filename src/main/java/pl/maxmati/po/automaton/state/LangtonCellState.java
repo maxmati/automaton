@@ -81,4 +81,9 @@ public class LangtonCellState implements CellState {
         result = 31 * result + (antState != null ? antState.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public CellState next() {
+        return new LangtonCellState((BinaryState) cellState.next(), antId, antState);
+    }
 }
