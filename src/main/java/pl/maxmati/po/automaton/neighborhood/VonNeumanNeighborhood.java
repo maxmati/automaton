@@ -1,5 +1,6 @@
 package pl.maxmati.po.automaton.neighborhood;
 
+import pl.maxmati.po.automaton.Utils;
 import pl.maxmati.po.automaton.coordinates.CellCoordinates;
 import pl.maxmati.po.automaton.coordinates.Cords2D;
 import pl.maxmati.po.automaton.exceptions.NotSupportedCellCoordinates;
@@ -13,6 +14,16 @@ import java.util.Set;
  */
 public class VonNeumanNeighborhood implements CellNeighborhood {
     int radius;
+    private boolean wrap = false;
+    private Integer width = null;
+    private Integer height = null;
+
+    public VonNeumanNeighborhood(int radius, boolean wrap, Integer width, Integer height) {
+        this(radius);
+        this.wrap = wrap;
+        this.width = width;
+        this.height = height;
+    }
 
     public VonNeumanNeighborhood(int radius) {
         this.radius = radius;
@@ -31,7 +42,11 @@ public class VonNeumanNeighborhood implements CellNeighborhood {
                 if(x == 0 && y == 0)
                     continue;
 
-                neighbors.add(new Cords2D(cords.x + x, cords.y + y));
+                int nx = wrap ? Utils.mod(cords.x + x, width) : cords.x + x;
+                int ny = wrap ? Utils.mod(cords.y + y, height) : cords.y + y;
+
+                neighbors.add(new Cords2D(nx, ny));
+//                neighbors.add(new Cords2D(cords.x + x, cords.y + y));
             }
 
         }
