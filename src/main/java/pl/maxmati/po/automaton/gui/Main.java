@@ -6,9 +6,7 @@ package pl.maxmati.po.automaton.gui;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import pl.maxmati.po.automaton.automaton.GameOfLife;
 
@@ -16,8 +14,10 @@ public class Main extends Application {
 
     public static final String TITLE = "Automaton";
     CommandQueue queue = new CommandQueue();
+    Ticker ticker = null;
     BoardAdapter adapter = null;
     Board board = null;
+    Controls controls = null;
 
     public static void main(String[] args) {
         launch(args);
@@ -28,17 +28,16 @@ public class Main extends Application {
         primaryStage.setTitle(TITLE);
 
         adapter = new BoardAdapter(queue, 100, 100, new GameOfLife(100, 100));
+        ticker = new Ticker(adapter);
         board = new Board(adapter);
+        controls = new Controls(adapter, ticker);
 
         SplitPane sp = new SplitPane();
-
-        StackPane sp2 = new StackPane();
-        sp2.getChildren().add(new Button("Test@"));
-
-        sp.getItems().addAll(board, sp2);
+        sp.getItems().addAll(board, controls.getRoot());
 
         Scene scene = new Scene(sp);
         primaryStage.setScene(scene);
         primaryStage.show();
+
     }
 }

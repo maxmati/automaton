@@ -1,5 +1,6 @@
 package pl.maxmati.po.automaton.gui;
 
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.CacheHint;
@@ -142,6 +143,6 @@ public class Board extends Canvas implements Observer{
 
     @Override
     public void update(Observable observable, Object o) {
-        draw();
+        Platform.runLater(this::draw);
     }
 }

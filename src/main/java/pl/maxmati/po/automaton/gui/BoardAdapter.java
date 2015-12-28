@@ -58,6 +58,12 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Co
         notifyObservers();
     }
 
+    public void tickAutomaton() {
+        automaton = automaton.nextState();
+        setChanged();
+        notifyObservers();
+    }
+
     public class BoardIterator implements Iterator<ColorCell> {
 
         private final Iterator<Cell> iterator;
