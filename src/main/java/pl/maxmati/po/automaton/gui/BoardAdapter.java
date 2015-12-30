@@ -1,20 +1,19 @@
 package pl.maxmati.po.automaton.gui;
 
 import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
 import pl.maxmati.po.automaton.Cell;
 import pl.maxmati.po.automaton.automaton.Automaton;
+import pl.maxmati.po.automaton.automaton.factories.AutomatonFactory;
 import pl.maxmati.po.automaton.coordinates.CellCoordinates;
-import pl.maxmati.po.automaton.coordinates.Cords2D;
 import pl.maxmati.po.automaton.gui.ColorTranslator.ColorTranslator;
 import pl.maxmati.po.automaton.gui.ColorTranslator.ColorTranslatorFactory;
-
-import javafx.scene.paint.Color;
 import pl.maxmati.po.automaton.gui.CordsTranslator.PositionTranslator;
 import pl.maxmati.po.automaton.gui.CordsTranslator.PositionTranslatorFactory;
 import pl.maxmati.po.automaton.gui.commands.BoardAdapterCommand;
-import pl.maxmati.po.automaton.gui.commands.Command;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Observable;
 
 /**
@@ -60,6 +59,14 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Co
 
     public void tickAutomaton() {
         automaton = automaton.nextState();
+        setChanged();
+        notifyObservers();
+    }
+
+    public void createAutomaton(String type, Map<String, Object> params) {
+        automaton = AutomatonFactory.createAutomaton(type, params);
+        width = (Integer) params.get("Width");
+        height = (Integer) params.get("Height");
         setChanged();
         notifyObservers();
     }

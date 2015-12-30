@@ -5,17 +5,22 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import pl.maxmati.po.automaton.gui.commands.CreateAutomatonCommand;
 import pl.maxmati.po.automaton.gui.commands.TickCommand;
+
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by maxmati on 12/23/15.
  */
 public class Controls {
 
-    public static final String TICK_BUTTON_LABEL = "Tick";
-    public static final String AUTO_TICK_START_LABEL = "Start";
-    public static final String AUTO_TICK_STOP_LABEL = "Stop";
-    public static final String CREATE_NEW_AUTOMATON_LABEL = "Create new Automaton";
+    private static final String TICK_BUTTON_LABEL = "Tick";
+    private static final String AUTO_TICK_START_LABEL = "Start";
+    private static final String AUTO_TICK_STOP_LABEL = "Stop";
+    private static final String CREATE_NEW_AUTOMATON_LABEL = "Create new Automaton";
+
     private final BoardAdapter adapter;
     private final Ticker ticker;
     VBox root = new VBox();
@@ -27,6 +32,17 @@ public class Controls {
 
         HBox tickSection = createTickControlSection(adapter, ticker);
         Button createAutomatonButton = new Button(CREATE_NEW_AUTOMATON_LABEL);
+
+        createAutomatonButton.setOnAction(actionEvent -> {
+            Optional<Map<String, Object>> response = new CreateAutomatonDialog().show();
+
+            response.ifPresent(params -> {
+                final String type = (String) params.get(CreateAutomatonDialog.AUTOMATON_TYPE_KEY);
+                params.remove(CreateAutomatonDialog.AUTOMATON_TYPE_KEY);
+                adapter.dispatchCommand(new CreateAutomatonCommand(type, params));
+            });
+
+        });
 
         root.getChildren().addAll(tickSection, createAutomatonButton);
     }
