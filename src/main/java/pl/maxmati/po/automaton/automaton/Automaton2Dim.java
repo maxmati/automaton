@@ -18,6 +18,11 @@ public abstract class Automaton2Dim extends Automaton {
         super(neighborhoodStrategy, stateFactory);
         this.width = width;
         this.height = height;
+
+        for(Automaton.CellIterator iterator = this.cellIterator(); iterator.hasNext();){
+            Cell cell = iterator.next();
+            iterator.setState(stateFactory.initialState(cell.cords));
+        }
     }
 
     @Override

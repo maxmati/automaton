@@ -16,10 +16,14 @@ import java.util.*;
 public class QuadLife extends Automaton2Dim {
 
     public static final Set<Integer> survive = new HashSet<>(Arrays.asList(2, 3));
-    public static final Set<Integer> born = new HashSet<>(Arrays.asList(3));
+    public static final Set<Integer> born = new HashSet<>(Collections.singletonList(3));
 
     public QuadLife(int width, int height){
-        this(new MooreNeighborhood(1), new UniformStateFactory(QuadState.DEAD), width, height);
+        this(width, height, false);
+    }
+
+    public QuadLife(int width, int height, Boolean wrap){
+        this(new MooreNeighborhood(1, wrap, width, height), new UniformStateFactory(QuadState.DEAD), width, height);
     }
 
     private QuadLife(CellNeighborhood neighborhoodStrategy, CellStateFactory stateFactory, int width, int height) {

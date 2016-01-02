@@ -35,4 +35,8 @@ public enum LangtonAntState {
                 throw new RuntimeException();
         }
     }
+
+    public LangtonAntState next() {
+        return rotateAntRight(this);
+    }
 }

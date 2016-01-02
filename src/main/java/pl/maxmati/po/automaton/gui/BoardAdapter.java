@@ -1,16 +1,13 @@
 package pl.maxmati.po.automaton.gui;
 
 import javafx.geometry.Point2D;
-import javafx.scene.paint.Color;
-import pl.maxmati.po.automaton.Cell;
 import pl.maxmati.po.automaton.automaton.Automaton;
 import pl.maxmati.po.automaton.automaton.factories.AutomatonFactory;
 import pl.maxmati.po.automaton.coordinates.CellCoordinates;
-import pl.maxmati.po.automaton.gui.ColorTranslator.ColorTranslator;
-import pl.maxmati.po.automaton.gui.ColorTranslator.ColorTranslatorFactory;
-import pl.maxmati.po.automaton.gui.CordsTranslator.PositionTranslator;
-import pl.maxmati.po.automaton.gui.CordsTranslator.PositionTranslatorFactory;
 import pl.maxmati.po.automaton.gui.commands.BoardAdapterCommand;
+import pl.maxmati.po.automaton.gui.translators.color.CellRendererFactory;
+import pl.maxmati.po.automaton.gui.translators.cords.PositionTranslator;
+import pl.maxmati.po.automaton.gui.translators.cords.PositionTranslatorFactory;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -19,7 +16,7 @@ import java.util.Observable;
 /**
  * Created by maxmati on 12/17/15.
  */
-public class BoardAdapter extends Observable implements Iterable<BoardAdapter.ColorCell> {
+public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Cell> {
     private int height;
     private int width;
     private Automaton automaton;
@@ -41,8 +38,8 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Co
     }
 
     @Override
-    public Iterator<ColorCell> iterator() {
-        return new BoardIterator(automaton.iterator(), ColorTranslatorFactory.create(automaton), PositionTranslatorFactory.create(automaton));
+    public Iterator<Cell> iterator() {
+        return new BoardIterator(automaton.iterator(), CellRendererFactory.createFactory(automaton), PositionTranslatorFactory.create(automaton));
     }
 
     public void dispatchCommand(BoardAdapterCommand command){
@@ -71,15 +68,15 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Co
         notifyObservers();
     }
 
-    public class BoardIterator implements Iterator<ColorCell> {
+    public class BoardIterator implements Iterator<Cell> {
 
-        private final Iterator<Cell> iterator;
-        private final ColorTranslator colorTranslator;
+        private final Iterator<pl.maxmati.po.automaton.Cell> iterator;
+        private final CellRendererFactory cellRendererFactory;
         private final PositionTranslator positionTranslator;
 
-        public BoardIterator(Iterator<Cell> iterator, ColorTranslator colorTranslator, PositionTranslator positionTranslator) {
+        public BoardIterator(Iterator<pl.maxmati.po.automaton.Cell> iterator, CellRendererFactory cellRendererFactory, PositionTranslator positionTranslator) {
             this.iterator = iterator;
-            this.colorTranslator = colorTranslator;
+            this.cellRendererFactory = cellRendererFactory;
             this.positionTranslator = positionTranslator;
         }
 
@@ -89,23 +86,23 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Co
         }
 
         @Override
-        public ColorCell next() {
-            final Cell cell = iterator.next();
-            return new ColorCell(colorTranslator.translate(cell.state), positionTranslator.translate(cell.cords)) ;
+        public Cell next() {
+            final pl.maxmati.po.automaton.Cell cell = iterator.next();
+            return new Cell(cellRendererFactory.create(cell.state), positionTranslator.translate(cell.cords)) ;
         }
     }
 
-    public static class ColorCell {
-        private final Color color;
+    public static class Cell {
+        private final CellRenderer renderer;
         private final Point2D position;
 
-        public ColorCell(Color color, Point2D position) {
-            this.color = color;
+        public Cell(CellRenderer renderer, Point2D position) {
+            this.renderer = renderer;
             this.position = position;
         }
 
-        public Color getColor() {
-            return color;
+        public CellRenderer getRenderer() {
+            return renderer;
         }
 
         public Point2D getPosition() {

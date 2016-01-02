@@ -84,6 +84,11 @@ public class LangtonCellState implements CellState {
 
     @Override
     public CellState next() {
-        return new LangtonCellState((BinaryState) cellState.next(), antId, antState);
+        if(antState == LangtonAntState.WEST)
+            return new LangtonCellState((BinaryState) cellState.next(), antId, null);
+        else if ( antState == null)
+            return new LangtonCellState(cellState, antId == null ? 1 : antId, LangtonAntState.NORTH);
+        else
+            return new LangtonCellState(cellState, antId, antState.next());
     }
 }

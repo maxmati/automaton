@@ -1,6 +1,7 @@
 package pl.maxmati.po.automaton.automaton;
 
 import pl.maxmati.po.automaton.Cell;
+import pl.maxmati.po.automaton.Utils;
 import pl.maxmati.po.automaton.coordinates.Cords2D;
 import pl.maxmati.po.automaton.neighborhood.CellNeighborhood;
 import pl.maxmati.po.automaton.neighborhood.VonNeumanNeighborhood;
@@ -20,7 +21,11 @@ import java.util.Set;
 public class LangtonAnt extends Automaton2Dim {
 
     public LangtonAnt(int width, int height){
-        this(new VonNeumanNeighborhood(1), new UniformStateFactory(new LangtonCellState(BinaryState.DEAD)), width, height);
+        this(width, height, false);
+    }
+
+    public LangtonAnt(int width, int height, boolean wrap){
+        this(new VonNeumanNeighborhood(1, wrap, width, height), new UniformStateFactory(new LangtonCellState(BinaryState.DEAD)), width, height);
     }
 
     LangtonAnt(CellNeighborhood neighborhoodStrategy, CellStateFactory stateFactory, int width, int height) {
@@ -54,7 +59,7 @@ public class LangtonAnt extends Automaton2Dim {
 
     private BinaryState getNewCellState(LangtonCellState currentState) {
         BinaryState newCellState;
-        if(currentState.antId == null){
+        if(currentState.antState == null){
             newCellState = currentState.cellState;
         } else {
             switch (currentState.cellState){
@@ -85,13 +90,13 @@ public class LangtonAnt extends Automaton2Dim {
 
         switch (nextAntState(antCell)){
             case NORTH:
-                return new Cords2D(cellCords.x, cellCords.y-1);
+                return new Cords2D(cellCords.x, Utils.mod(cellCords.y-1, height));
             case EAST:
-                return new Cords2D(cellCords.x+1, cellCords.y);
+                return new Cords2D(Utils.mod(cellCords.x+1, width), cellCords.y);
             case SOUTH:
-                return new Cords2D(cellCords.x, cellCords.y+1);
+                return new Cords2D(cellCords.x, Utils.mod(cellCords.y+1, height));
             case WEST:
-                return new Cords2D(cellCords.x-1, cellCords.y);
+                return new Cords2D(Utils.mod(cellCords.x-1, width), cellCords.y);
             default:
                 throw new RuntimeException();
         }
@@ -117,7 +122,7 @@ public class LangtonAnt extends Automaton2Dim {
 
         for (Cell cell: neighborsSCells){
             LangtonCellState state = (LangtonCellState) cell.state;
-            if(state != null && state.antId != null){
+            if(state != null && state.antState != null){
                 ants.add(cell);
             }
         }

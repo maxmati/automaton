@@ -1,8 +1,6 @@
 package pl.maxmati.po.automaton.gui;
 
 import javafx.application.Platform;
-import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
 import javafx.scene.CacheHint;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -62,12 +60,8 @@ public class Board extends Canvas implements Observer{
 
         context.setStroke(Color.GRAY);
 
-        for(BoardAdapter.ColorCell cell: adapter){
-            context.setFill(cell.getColor());
-            final double x = cell.getPosition().getX() * cellWidth;
-            final double y = cell.getPosition().getY() * cellHeight;
-            context.fillRect(x, y, cellWidth, cellHeight);
-//            context.strokeRect(x, y, cellWidth, cellHeight);
+        for(BoardAdapter.Cell cell: adapter){
+            cell.getRenderer().render(context, cell.getPosition(), cellWidth, cellHeight);
         }
 
         for (int i = 0; i < adapter.getHeight(); i++) {

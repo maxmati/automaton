@@ -27,7 +27,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle(TITLE);
 
-        adapter = new BoardAdapter(queue, 100, 100, new GameOfLife(100, 100));
+        adapter = new BoardAdapter(queue, 10, 5, new GameOfLife(5, 10));
         ticker = new Ticker(adapter);
         board = new Board(adapter);
         controls = new Controls(adapter, ticker);

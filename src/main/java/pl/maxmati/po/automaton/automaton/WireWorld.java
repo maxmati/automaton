@@ -17,12 +17,17 @@ import java.util.Set;
 public class WireWorld extends Automaton2Dim {
 
     public WireWorld(int width, int height){
-        this(new MooreNeighborhood(1), new UniformStateFactory(WireWorldState.VOID), width, height);
+        this(width, height, false);
+
+    }
+    public WireWorld(Integer width, Integer height, Boolean wrap) {
+        this(new MooreNeighborhood(1, wrap, width, height), new UniformStateFactory(WireWorldState.VOID), width, height);
     }
 
     private WireWorld(CellNeighborhood neighborhoodStrategy, CellStateFactory stateFactory, int width, int height) {
         super(neighborhoodStrategy, stateFactory, width, height);
     }
+
 
     @Override
     protected Automaton newInstance(CellStateFactory stateFactory, CellNeighborhood neighborhood) {

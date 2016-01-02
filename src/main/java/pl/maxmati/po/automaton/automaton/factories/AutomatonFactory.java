@@ -15,6 +15,9 @@ public abstract class AutomatonFactory {
 
     static {
         availableAutomatons.put("Game of Life", new GameOfLifeFactory());
+        availableAutomatons.put("Wire World", new WireWorldFactory());
+        availableAutomatons.put("Langton Ant", new LangtonAntFactory());
+        availableAutomatons.put("Quad Life", new QuadLifeFactory());
     }
 
     static public Automaton createAutomaton(String name, Map<String, Object> params){

@@ -34,11 +34,6 @@ public class GameOfLife extends Automaton2Dim {
         super(neighborhoodStrategy, stateFactory, width, height);
 
         this.rule = rule;
-
-        for(Automaton.CellIterator iterator = this.cellIterator(); iterator.hasNext();){
-            Cell cell = iterator.next();
-            iterator.setState(stateFactory.initialState(cell.cords));
-        }
     }
 
     @Override
