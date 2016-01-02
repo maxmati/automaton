@@ -88,6 +88,10 @@ public abstract class Automaton implements Iterable<Cell>{
         setCellState(cords, mapCoordinate(cords).next());
     }
 
+    public Automaton createNewEmpty(){
+        return newInstance(stateFactory, neighborhoodStrategy);
+    }
+
     public class CellIterator implements Iterator<Cell> {
         private CellCoordinates currentState;
 

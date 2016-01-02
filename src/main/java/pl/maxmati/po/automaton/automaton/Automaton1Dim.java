@@ -31,6 +31,11 @@ public class Automaton1Dim extends Automaton {
         super(neighborhoodStrategy, stateFactory);
         this.width = width;
         this.rule = rule;
+
+        for(Automaton.CellIterator iterator = this.cellIterator(); iterator.hasNext();){
+            Cell cell = iterator.next();
+            iterator.setState(stateFactory.initialState(cell.cords));
+        }
     }
 
     @Override
@@ -103,8 +108,10 @@ public class Automaton1Dim extends Automaton {
 
     public static class Rule {
         Set<List<BinaryState>> aliveTrios = new HashSet<>();
+        int rule;
 
         public Rule(int rule) {
+            this.rule = rule;
             this.aliveTrios = new HashSet<>();
 
             for(int i = 0; i < 8; ++i)
@@ -122,6 +129,11 @@ public class Automaton1Dim extends Automaton {
 
         public boolean match(List<BinaryState> trio) {
             return aliveTrios.contains(trio);
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(rule);
         }
     }
 }

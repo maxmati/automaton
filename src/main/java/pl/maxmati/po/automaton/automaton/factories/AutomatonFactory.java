@@ -18,6 +18,7 @@ public abstract class AutomatonFactory {
         availableAutomatons.put("Wire World", new WireWorldFactory());
         availableAutomatons.put("Langton Ant", new LangtonAntFactory());
         availableAutomatons.put("Quad Life", new QuadLifeFactory());
+        availableAutomatons.put("Single dimension Automaton", new Automaton1DimFactory());
     }
 
     static public Automaton createAutomaton(String name, Map<String, Object> params){

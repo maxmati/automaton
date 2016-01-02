@@ -9,7 +9,7 @@ import pl.maxmati.po.automaton.state.CellState;
  */
 public abstract class CellRendererFactory {
     public static CellRendererFactory createFactory(Automaton automaton) {
-        if(automaton instanceof GameOfLife)
+        if(automaton instanceof GameOfLife || automaton instanceof Automaton1Dim)
             return new BinaryCellRendererFactory();
         else if(automaton instanceof WireWorld)
             return new WireWorldCellRendererFactory();

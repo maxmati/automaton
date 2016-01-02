@@ -4,6 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import pl.maxmati.po.automaton.automaton.Automaton1Dim;
 import pl.maxmati.po.automaton.automaton.GameOfLife;
 import pl.maxmati.po.automaton.automaton.factories.AutomatonFactory;
 
@@ -31,7 +32,7 @@ public class CreateAutomatonDialog {
         ButtonType loginButtonType = new ButtonType(CREATE_BUTTON_LABEL, ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
-        ComboBox<String> type = new ComboBox<String>();
+        ComboBox<String> type = new ComboBox<>();
         type.getItems().addAll(AutomatonFactory.getAvailableAutomatons());
 
         GridPane grid = new GridPane();
@@ -84,7 +85,7 @@ public class CreateAutomatonDialog {
         if(entry.getValue() instanceof Integer) {
             Spinner spinner = new Spinner(1,99, (Integer) entry.getValue());
             spinner.setEditable(true);
-            return  spinner;
+            return spinner;
         } else if(entry.getValue() instanceof Boolean){
             CheckBox checkbox = new CheckBox();
             checkbox.setSelected((Boolean) entry.getValue());
@@ -93,6 +94,10 @@ public class CreateAutomatonDialog {
             TextField textField = new TextField();
             textField.setText(entry.getValue().toString());
             return textField;
+        } else if(entry.getValue() instanceof Automaton1Dim.Rule) {
+            Spinner spinner = new Spinner(0,255, Integer.valueOf(entry.getValue().toString()));
+            spinner.setEditable(true);
+            return spinner;
         }
         return null;
     }
