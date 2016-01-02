@@ -68,7 +68,7 @@ public class Board extends Canvas implements Observer{
             context.strokeLine(0,cellHeight*i, getWidth(), cellHeight*i);
         }
 
-        for (int i = 0; i < adapter.getHeight(); i++) {
+        for (int i = 0; i < adapter.getWidth(); i++) {
             context.strokeLine(cellWidth*i, 0, cellWidth*i, getHeight());
         }
 
