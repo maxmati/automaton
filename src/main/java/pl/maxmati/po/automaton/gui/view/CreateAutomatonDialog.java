@@ -29,6 +29,7 @@ public class CreateAutomatonDialog {
         dialog = new Dialog<>();
         dialog.setWidth(500);
         dialog.setHeight(500);
+        dialog.setResizable(true);
 
         dialog.setTitle(CRATE_AUTOMATON_DIALOG_TITLE);
 
@@ -51,7 +52,7 @@ public class CreateAutomatonDialog {
                 addToGrid(grid, new Label(entry.getKey()), 0, i);
                 Control c = createControlForParam(entry);
                 paramsFields.put(entry.getKey(), c);
-                grid.add(c, 1, i);
+                addToGrid(grid, c, 1, i);
                 ++i;
             }
         });

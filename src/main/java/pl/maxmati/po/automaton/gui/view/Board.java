@@ -181,7 +181,7 @@ public class Board extends Canvas implements Observer{
         resizeTask = new TimerTask() {
             @Override
             public void run() {
-                drawAll();
+                Platform.runLater(() -> drawAll());
             }
         };
         resizeTimer.schedule( resizeTask, 200);
