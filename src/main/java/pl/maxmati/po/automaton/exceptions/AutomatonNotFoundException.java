@@ -5,5 +5,6 @@ package pl.maxmati.po.automaton.exceptions;
  */
 public class AutomatonNotFoundException extends AutomatonException {
     public AutomatonNotFoundException(String name) {
+        super("Unable to found automaton: " + name);
     }
 }

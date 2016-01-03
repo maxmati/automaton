@@ -1,6 +1,7 @@
 package pl.maxmati.po.automaton.gui.view.cell.factiories;
 
 import pl.maxmati.po.automaton.automaton.*;
+import pl.maxmati.po.automaton.exceptions.NoCellRendererFoundForGivenAutomaton;
 import pl.maxmati.po.automaton.gui.view.cell.CellRenderer;
 import pl.maxmati.po.automaton.state.CellState;
 
@@ -17,7 +18,8 @@ public abstract class CellRendererFactory {
             return new LangtonAntCellRendererFactory();
         else if(automaton instanceof QuadLife)
             return new QuadCellRendererFactory();
-        return null;
+        else
+            throw new NoCellRendererFoundForGivenAutomaton(automaton);
     }
     public abstract CellRenderer create(CellState state);
 
