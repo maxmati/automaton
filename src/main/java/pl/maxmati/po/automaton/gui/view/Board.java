@@ -1,4 +1,4 @@
-package pl.maxmati.po.automaton.gui;
+package pl.maxmati.po.automaton.gui.view;
 
 import javafx.application.Platform;
 import javafx.scene.CacheHint;
@@ -9,6 +9,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import pl.maxmati.po.automaton.coordinates.Cords2D;
 import pl.maxmati.po.automaton.gui.commands.SwitchCellCommand;
+import pl.maxmati.po.automaton.gui.controller.BoardAdapter;
 
 import java.util.Observable;
 import java.util.Observer;

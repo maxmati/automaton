@@ -1,4 +1,4 @@
-package pl.maxmati.po.automaton.gui;
+package pl.maxmati.po.automaton.gui.view.cell;
 
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -7,7 +7,7 @@ import javafx.scene.paint.Color;
 /**
  * Created by maxmati on 12/30/15.
  */
-public class ColorCellRenderer  implements CellRenderer{
+public class ColorCellRenderer  implements CellRenderer {
     private final Color color;
 
     public ColorCellRenderer(Color color) {

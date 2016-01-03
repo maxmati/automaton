@@ -1,4 +1,4 @@
-package pl.maxmati.po.automaton.gui;
+package pl.maxmati.po.automaton.gui.controller;
 
 import pl.maxmati.po.automaton.gui.commands.Command;
 

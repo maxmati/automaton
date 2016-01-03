@@ -1,4 +1,4 @@
-package pl.maxmati.po.automaton.gui;
+package pl.maxmati.po.automaton.gui.view;
 
 import javafx.geometry.Pos;
 import javafx.scene.Node;

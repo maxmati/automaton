@@ -1,4 +1,4 @@
-package pl.maxmati.po.automaton.gui;
+package pl.maxmati.po.automaton.gui.controller;
 
 import javafx.geometry.Point2D;
 import pl.maxmati.po.automaton.automaton.Automaton;
@@ -8,7 +8,8 @@ import pl.maxmati.po.automaton.coordinates.CellCoordinates;
 import pl.maxmati.po.automaton.coordinates.Cords1D;
 import pl.maxmati.po.automaton.coordinates.Cords2D;
 import pl.maxmati.po.automaton.gui.commands.BoardAdapterCommand;
-import pl.maxmati.po.automaton.gui.translators.color.CellRendererFactory;
+import pl.maxmati.po.automaton.gui.view.cell.CellRenderer;
+import pl.maxmati.po.automaton.gui.view.cell.factiories.CellRendererFactory;
 
 import java.util.Iterator;
 import java.util.Map;

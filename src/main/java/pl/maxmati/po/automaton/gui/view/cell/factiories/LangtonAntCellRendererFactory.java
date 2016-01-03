@@ -1,7 +1,7 @@
-package pl.maxmati.po.automaton.gui.translators.color;
+package pl.maxmati.po.automaton.gui.view.cell.factiories;
 
-import pl.maxmati.po.automaton.gui.AntCellRenderer;
-import pl.maxmati.po.automaton.gui.CellRenderer;
+import pl.maxmati.po.automaton.gui.view.cell.AntCellRenderer;
+import pl.maxmati.po.automaton.gui.view.cell.CellRenderer;
 import pl.maxmati.po.automaton.state.BinaryState;
 import pl.maxmati.po.automaton.state.CellState;
 import pl.maxmati.po.automaton.state.LangtonAntState;

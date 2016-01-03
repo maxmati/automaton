@@ -10,6 +10,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
 import javafx.stage.Stage;
 import pl.maxmati.po.automaton.automaton.GameOfLife;
+import pl.maxmati.po.automaton.gui.controller.BoardAdapter;
+import pl.maxmati.po.automaton.gui.controller.CommandQueue;
+import pl.maxmati.po.automaton.gui.controller.Ticker;
+import pl.maxmati.po.automaton.gui.view.Board;
+import pl.maxmati.po.automaton.gui.view.Controls;
 
 public class Main extends Application {
 

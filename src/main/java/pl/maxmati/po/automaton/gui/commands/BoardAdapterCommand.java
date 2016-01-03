@@ -1,6 +1,6 @@
 package pl.maxmati.po.automaton.gui.commands;
 
-import pl.maxmati.po.automaton.gui.BoardAdapter;
+import pl.maxmati.po.automaton.gui.controller.BoardAdapter;
 
 /**
  * Created by maxmati on 12/23/15.

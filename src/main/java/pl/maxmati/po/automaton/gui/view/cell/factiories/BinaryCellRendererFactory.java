@@ -1,8 +1,8 @@
-package pl.maxmati.po.automaton.gui.translators.color;
+package pl.maxmati.po.automaton.gui.view.cell.factiories;
 
 import javafx.scene.paint.Color;
-import pl.maxmati.po.automaton.gui.CellRenderer;
-import pl.maxmati.po.automaton.gui.ColorCellRenderer;
+import pl.maxmati.po.automaton.gui.view.cell.CellRenderer;
+import pl.maxmati.po.automaton.gui.view.cell.ColorCellRenderer;
 import pl.maxmati.po.automaton.state.BinaryState;
 import pl.maxmati.po.automaton.state.CellState;
 

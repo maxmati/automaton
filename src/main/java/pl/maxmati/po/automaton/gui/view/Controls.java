@@ -1,4 +1,4 @@
-package pl.maxmati.po.automaton.gui;
+package pl.maxmati.po.automaton.gui.view;
 
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -9,6 +9,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import pl.maxmati.po.automaton.gui.commands.CreateAutomatonCommand;
 import pl.maxmati.po.automaton.gui.commands.TickCommand;
+import pl.maxmati.po.automaton.gui.controller.BoardAdapter;
+import pl.maxmati.po.automaton.gui.controller.Ticker;
 
 import java.util.Map;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package pl.maxmati.po.automaton.gui;
+package pl.maxmati.po.automaton.gui.controller;
 
 import pl.maxmati.po.automaton.gui.commands.TickCommand;
 
@@ -40,6 +40,7 @@ public class Ticker implements Runnable{
 
     @Override
     public void run() {
+        //noinspection InfiniteLoopStatement
         while (true) {
             synchronized (this) {
                 try {

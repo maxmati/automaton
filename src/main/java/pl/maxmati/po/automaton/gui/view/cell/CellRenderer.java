@@ -1,4 +1,4 @@
-package pl.maxmati.po.automaton.gui;
+package pl.maxmati.po.automaton.gui.view.cell;
 
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
