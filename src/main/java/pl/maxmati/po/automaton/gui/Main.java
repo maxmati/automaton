@@ -34,6 +34,7 @@ public class Main extends Application {
         primaryStage.setTitle(TITLE);
 
         SplitPane sp = new SplitPane();
+
         sp.getItems().addAll(board, controls.getRoot());
 
         Scene scene = new Scene(sp);

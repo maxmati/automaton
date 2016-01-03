@@ -1,7 +1,9 @@
 package pl.maxmati.po.automaton.gui;
 
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -20,16 +22,12 @@ public class Controls {
     private static final String AUTO_TICK_START_LABEL = "Start";
     private static final String AUTO_TICK_STOP_LABEL = "Stop";
     private static final String CREATE_NEW_AUTOMATON_LABEL = "Create new Automaton";
+    private static final String TICK_RATE_LABEL = "Tick rate";
 
-    private final BoardAdapter adapter;
-    private final Ticker ticker;
     VBox root = new VBox();
 
 
     public Controls(BoardAdapter adapter, Ticker ticker) {
-        this.adapter = adapter;
-        this.ticker = ticker;
-
         HBox tickSection = createTickControlSection(adapter, ticker);
         Button createAutomatonButton = new Button(CREATE_NEW_AUTOMATON_LABEL);
 
@@ -45,6 +43,11 @@ public class Controls {
         });
 
         root.getChildren().addAll(tickSection, createAutomatonButton);
+
+        root.setAlignment(Pos.TOP_CENTER);
+        root.setMinWidth(340);
+        root.setMaxWidth(400);
+        root.setSpacing(10);
     }
 
     public Node getRoot() {
@@ -55,8 +58,10 @@ public class Controls {
         Button tickButton = createTickButton(adapter);
         Button autoTickButton = createAutoTickButton(ticker);
         Slider tickRateSlider = createTickRateSlider(ticker);
-
-        return new HBox(tickButton, autoTickButton, tickRateSlider);
+        HBox hbox = new HBox(tickButton, autoTickButton, new Label(TICK_RATE_LABEL), tickRateSlider);
+        hbox.setSpacing(10);
+        hbox.setAlignment(Pos.TOP_CENTER);
+        return hbox;
     }
 
     private Slider createTickRateSlider(Ticker ticker) {
