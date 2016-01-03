@@ -27,6 +27,8 @@ public class CreateAutomatonDialog {
 
     public CreateAutomatonDialog() {
         dialog = new Dialog<>();
+        dialog.setWidth(500);
+        dialog.setHeight(500);
 
         dialog.setTitle(CRATE_AUTOMATON_DIALOG_TITLE);
 
