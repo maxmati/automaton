@@ -20,21 +20,24 @@ import java.util.Set;
  */
 public class LangtonAnt extends Automaton2Dim {
 
+    final boolean wrap;
+
     public LangtonAnt(int width, int height){
         this(width, height, false);
     }
 
     public LangtonAnt(int width, int height, boolean wrap){
-        this(new VonNeumanNeighborhood(1, wrap, width, height), new UniformStateFactory(new LangtonCellState(BinaryState.DEAD)), width, height);
+        this(new VonNeumanNeighborhood(1, wrap, width, height), new UniformStateFactory(new LangtonCellState(BinaryState.DEAD)), width, height, wrap);
     }
 
-    LangtonAnt(CellNeighborhood neighborhoodStrategy, CellStateFactory stateFactory, int width, int height) {
+    LangtonAnt(CellNeighborhood neighborhoodStrategy, CellStateFactory stateFactory, int width, int height, boolean wrap) {
         super(neighborhoodStrategy, stateFactory, width, height);
+        this.wrap = wrap;
     }
 
     @Override
     protected Automaton newInstance(CellStateFactory stateFactory, CellNeighborhood neighborhood) {
-        return new LangtonAnt(neighborhood, stateFactory, width, height);
+        return new LangtonAnt(neighborhood, stateFactory, width, height, wrap);
     }
 
     @Override
@@ -89,14 +92,26 @@ public class LangtonAnt extends Automaton2Dim {
         Cords2D cellCords = (Cords2D) antCell.cords;
 
         switch (nextAntState(antCell)){
-            case NORTH:
-                return new Cords2D(cellCords.x, Utils.mod(cellCords.y-1, height));
-            case EAST:
-                return new Cords2D(Utils.mod(cellCords.x+1, width), cellCords.y);
-            case SOUTH:
-                return new Cords2D(cellCords.x, Utils.mod(cellCords.y+1, height));
-            case WEST:
-                return new Cords2D(Utils.mod(cellCords.x-1, width), cellCords.y);
+            case NORTH: {
+                int ny = cellCords.y - 1;
+                ny = wrap ? Utils.mod(ny, height) : ny;
+                return new Cords2D(cellCords.x, ny);
+            }
+            case EAST: {
+                int nx = cellCords.x + 1;
+                nx = wrap ? Utils.mod(nx, width) : nx;
+                return new Cords2D(nx, cellCords.y);
+            }
+            case SOUTH: {
+                int ny = cellCords.y + 1;
+                ny = wrap ? Utils.mod(ny, height) : ny;
+                return new Cords2D(cellCords.x, ny);
+            }
+            case WEST: {
+                int nx = cellCords.x - 1;
+                nx = wrap ? Utils.mod(nx, width) : nx;
+                return new Cords2D(nx, cellCords.y);
+            }
             default:
                 throw new RuntimeException();
         }
