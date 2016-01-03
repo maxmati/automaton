@@ -4,6 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.util.StringConverter;
 import pl.maxmati.po.automaton.automaton.Automaton1Dim;
 import pl.maxmati.po.automaton.automaton.GameOfLife;
 import pl.maxmati.po.automaton.automaton.factories.AutomatonFactory;
@@ -83,9 +84,7 @@ public class CreateAutomatonDialog {
 
     private Control createControlForParam(Map.Entry<String, Object> entry) {
         if(entry.getValue() instanceof Integer) {
-            Spinner spinner = new Spinner(1,99, (Integer) entry.getValue());
-            spinner.setEditable(true);
-            return spinner;
+            return createSpinner(5, 99, (Integer) entry.getValue());
         } else if(entry.getValue() instanceof Boolean){
             CheckBox checkbox = new CheckBox();
             checkbox.setSelected((Boolean) entry.getValue());
@@ -95,11 +94,30 @@ public class CreateAutomatonDialog {
             textField.setText(entry.getValue().toString());
             return textField;
         } else if(entry.getValue() instanceof Automaton1Dim.Rule) {
-            Spinner spinner = new Spinner(0,255, Integer.valueOf(entry.getValue().toString()));
-            spinner.setEditable(true);
-            return spinner;
+            return createSpinner(0, 255, Integer.valueOf(entry.getValue().toString()));
         }
         return null;
+    }
+
+    private Control createSpinner(int min, int max, int current) {
+        Spinner<Integer> spinner = new Spinner<>(min, max, current);
+
+        spinner.setEditable(true);
+        spinner.focusedProperty().addListener((s, oldValue, newValue) -> {
+            if(newValue) return;
+
+            if(!spinner.isEditable()) return;
+            String text = spinner.getEditor().getText();
+            SpinnerValueFactory<Integer> valueFactory = spinner.getValueFactory();
+            if(valueFactory != null){
+                StringConverter<Integer> converter = valueFactory.getConverter();
+                if(converter != null){
+                    Integer value = converter.fromString(text);
+                    valueFactory.setValue(value);
+                }
+            }
+        });
+        return spinner;
     }
 
     private Map<String, Object> getValuesFromParamsFields(HashMap<String, Control> paramsFields) {
