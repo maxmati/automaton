@@ -1,7 +1,6 @@
 package pl.maxmati.po.automaton.automaton;
 
 import pl.maxmati.po.automaton.Cell;
-import pl.maxmati.po.automaton.automaton.Automaton;
 import pl.maxmati.po.automaton.coordinates.Cords1D;
 import pl.maxmati.po.automaton.coordinates.Cords2D;
 import pl.maxmati.po.automaton.state.CellState;
@@ -21,7 +20,7 @@ public class AutomatonTestingUtils {
         boolean hitArray[][] = new boolean[state.length][state[0].length];
         for(Cell c: a){
             if(!(c.cords instanceof Cords2D || c.cords instanceof Cords1D))
-                fail("Cell cords should be instance of Cords2D or Cords1D " + message);
+                fail("RenderableCell cords should be instance of Cords2D or Cords1D " + message);
 
             final String wrongStateMessage = String.format("Wrong state for %s ", c.cords) + message;
             final String doubleStateMessage = String.format("Double state for %s ", c.cords) + message;

@@ -84,7 +84,7 @@ public class CreateAutomatonDialog {
 
     private Control createControlForParam(Map.Entry<String, Object> entry) {
         if(entry.getValue() instanceof Integer) {
-            return createSpinner(5, 99, (Integer) entry.getValue());
+            return createSpinner(5, 200, (Integer) entry.getValue());
         } else if(entry.getValue() instanceof Boolean){
             CheckBox checkbox = new CheckBox();
             checkbox.setSelected((Boolean) entry.getValue());

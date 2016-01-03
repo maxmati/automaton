@@ -31,11 +31,6 @@ public class Automaton1Dim extends Automaton {
         super(neighborhoodStrategy, stateFactory);
         this.width = width;
         this.rule = rule;
-
-        for(Automaton.CellIterator iterator = this.cellIterator(); iterator.hasNext();){
-            Cell cell = iterator.next();
-            iterator.setState(stateFactory.initialState(cell.cords));
-        }
     }
 
     @Override

@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 import pl.maxmati.po.automaton.coordinates.Cords2D;
 import pl.maxmati.po.automaton.gui.commands.SwitchCellCommand;
 import pl.maxmati.po.automaton.gui.controller.BoardAdapter;
+import pl.maxmati.po.automaton.gui.view.cell.CellRenderer;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -23,11 +24,13 @@ public class Board extends Canvas implements Observer{
 
     private final BoardAdapter adapter;
 
-    private Timer resizeTimer = new Timer();
+    private Timer resizeTimer = new Timer("Board redraw timer");
     private TimerTask resizeTask = null;
     private double cellHeight;
     private double cellWidth;
     private GraphicsContext context;
+    private boolean dirty = true;
+    private CellRenderer[][] old;
 
     public Board(BoardAdapter adapter){
 
@@ -37,8 +40,9 @@ public class Board extends Canvas implements Observer{
         this.adapter = adapter;
         adapter.addObserver(this);
 
+        old = new CellRenderer[adapter.getWidth()][adapter.getHeight()];
+
         context = this.getGraphicsContext2D();
-//        context.setGlobalBlendMode(BlendMode.);
 
         this.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             if(mouseEvent.getButton() == MouseButton.PRIMARY){
@@ -51,18 +55,34 @@ public class Board extends Canvas implements Observer{
                 adapter.dispatchCommand(new SwitchCellCommand(new Cords2D(x,y)));
             }
         });
+
+        TimerTask redrawTask = new TimerTask() {
+            @Override
+            public void run() {
+                if (dirty) Platform.runLater(() -> draw());
+            }
+        };
+        resizeTimer.scheduleAtFixedRate(redrawTask,35,35);
     }
 
-
-
     public void draw(){
+        if(!dirty) return;
+
+        if(old.length != adapter.getWidth() || old[0].length != adapter.getHeight() ) {
+            old = new CellRenderer[adapter.getWidth()][adapter.getHeight()];
+            drawAll();
+            return;
+        }
+
+        dirty = false;
+
         cellHeight = this.getHeight()/adapter.getHeight();
         cellWidth = this.getWidth()/adapter.getWidth();
 
         context.setStroke(Color.GRAY);
 
-        for(BoardAdapter.Cell cell: adapter){
-            cell.getRenderer().render(context, cell.getPosition(), cellWidth, cellHeight);
+        for(BoardAdapter.RenderableCell renderableCell : adapter){
+            drawCellIfNeeded(renderableCell);
         }
 
         for (int i = 0; i < adapter.getHeight(); i++) {
@@ -75,7 +95,38 @@ public class Board extends Canvas implements Observer{
 
     }
 
+    private void drawCellIfNeeded(BoardAdapter.RenderableCell renderableCell) {
+        CellRenderer newRenderer = renderableCell.getRenderer();
+        final int x = renderableCell.getPosition().x;
+        final int y = renderableCell.getPosition().y;
+        final CellRenderer oldRenderer = old[x][y];
+        if(newRenderer != oldRenderer) {
+            renderableCell.getRenderer().render(context, renderableCell.getPosition(), cellWidth, cellHeight);
+            old[x][y] = newRenderer;
+        }
+    }
 
+    public void drawAll(){
+        dirty = false;
+
+        cellHeight = this.getHeight()/adapter.getHeight();
+        cellWidth = this.getWidth()/adapter.getWidth();
+
+        context.setStroke(Color.GRAY);
+
+        for(BoardAdapter.RenderableCell renderableCell : adapter){
+            renderableCell.getRenderer().render(context, renderableCell.getPosition(), cellWidth, cellHeight);
+        }
+
+        for (int i = 0; i < adapter.getHeight(); i++) {
+            context.strokeLine(0,cellHeight*i, getWidth(), cellHeight*i);
+        }
+
+        for (int i = 0; i < adapter.getWidth(); i++) {
+            context.strokeLine(cellWidth*i, 0, cellWidth*i, getHeight());
+        }
+
+    }
 
     @Override
     public double minHeight(double width)
@@ -118,6 +169,7 @@ public class Board extends Canvas implements Observer{
     {
         super.setWidth(width);
         super.setHeight(height);
+        dirty = true;
         startRedrawTask();
     }
 
@@ -129,7 +181,7 @@ public class Board extends Canvas implements Observer{
         resizeTask = new TimerTask() {
             @Override
             public void run() {
-                draw();
+                drawAll();
             }
         };
         resizeTimer.schedule( resizeTask, 200);
@@ -138,6 +190,6 @@ public class Board extends Canvas implements Observer{
 
     @Override
     public void update(Observable observable, Object o) {
-        Platform.runLater(this::draw);
+        dirty = true;
     }
 }

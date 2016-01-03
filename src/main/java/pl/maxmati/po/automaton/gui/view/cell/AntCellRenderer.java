@@ -1,9 +1,9 @@
 package pl.maxmati.po.automaton.gui.view.cell;
 
-import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.transform.Rotate;
+import pl.maxmati.po.automaton.coordinates.Cords2D;
 
 /**
  * Created by maxmati on 12/30/15.
@@ -19,9 +19,9 @@ public class AntCellRenderer implements CellRenderer {
     }
 
     @Override
-    public void render(GraphicsContext context, Point2D position, double width, double height) {
-        final double x = position.getX() * width;
-        final double y = position.getY() * height;
+    public void render(GraphicsContext context, Cords2D position, double width, double height) {
+        final double x = position.x * width;
+        final double y = position.x * height;
         backgroundRender.render(context, position, width, height);
 
         if(rotateAngle == 90 || rotateAngle == 270){
@@ -36,5 +36,25 @@ public class AntCellRenderer implements CellRenderer {
         context.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
         context.drawImage(ant, x, y, width, height);
         context.restore();
+    }
+
+    @SuppressWarnings("SimplifiableIfStatement")
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AntCellRenderer that = (AntCellRenderer) o;
+
+        if (rotateAngle != that.rotateAngle) return false;
+        return backgroundRender.equals(that.backgroundRender);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = backgroundRender.hashCode();
+        result = 31 * result + rotateAngle;
+        return result;
     }
 }

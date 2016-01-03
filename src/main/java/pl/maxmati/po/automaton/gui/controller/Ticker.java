@@ -2,18 +2,30 @@ package pl.maxmati.po.automaton.gui.controller;
 
 import pl.maxmati.po.automaton.gui.commands.TickCommand;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Created by maxmati on 12/24/15.
  */
-public class Ticker implements Runnable{
+public class Ticker{
     private final BoardAdapter adapter;
+    private final Timer timer = new Timer("Ticker-timer");
+    private TimerTask task = null;
     private boolean active;
     private int rate = 10;
 
     public Ticker(BoardAdapter adapter) {
         this.adapter = adapter;
-        Thread t = new Thread(this);
-        t.start();
+    }
+
+    private TimerTask createTickTask() {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                adapter.dispatchCommand(new TickCommand());
+            }
+        };
     }
 
     public synchronized boolean isActive() {
@@ -21,12 +33,17 @@ public class Ticker implements Runnable{
     }
 
     public synchronized void start() {
+        if(task != null)
+            task.cancel();
+        task = createTickTask();
+        timer.scheduleAtFixedRate(task, rate, rate);
         active = true;
-        this.notify();
     }
 
     public synchronized void stop() {
         active = false;
+        task.cancel();
+        task = null;
     }
 
     public synchronized int getRate() {
@@ -34,23 +51,7 @@ public class Ticker implements Runnable{
     }
 
     public synchronized void setRate(int rate) {
-        System.out.println(rate);
         this.rate = rate;
-    }
-
-    @Override
-    public void run() {
-        //noinspection InfiniteLoopStatement
-        while (true) {
-            synchronized (this) {
-                try {
-                    this.wait(rate);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            if(active)
-                adapter.dispatchCommand(new TickCommand());
-        }
+        if(active) start();
     }
 }

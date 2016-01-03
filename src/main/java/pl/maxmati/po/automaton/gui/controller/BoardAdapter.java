@@ -1,6 +1,6 @@
 package pl.maxmati.po.automaton.gui.controller;
 
-import javafx.geometry.Point2D;
+import pl.maxmati.po.automaton.Cell;
 import pl.maxmati.po.automaton.automaton.Automaton;
 import pl.maxmati.po.automaton.automaton.Automaton1Dim;
 import pl.maxmati.po.automaton.automaton.factories.AutomatonFactory;
@@ -18,7 +18,7 @@ import java.util.Observable;
 /**
  * Created by maxmati on 12/17/15.
  */
-public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Cell> {
+public class BoardAdapter extends Observable implements Iterable<BoardAdapter.RenderableCell> {
     private int height;
     private int width;
     private AutomatonsHistory automatons;
@@ -41,7 +41,7 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Ce
     }
 
     @Override
-    public Iterator<Cell> iterator() {
+    public Iterator<RenderableCell> iterator() {
         return new BoardIterator(automatons);
     }
 
@@ -88,7 +88,7 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Ce
         else
             historySize = 1;
 
-        automatons = new AutomatonsHistory(height);
+        automatons = new AutomatonsHistory(historySize);
 
         for (int i = 1; i < historySize; i++) {
             automatons.add(automaton.createNewEmpty());
@@ -96,12 +96,13 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Ce
         automatons.add(automaton);
     }
 
-    public class BoardIterator implements Iterator<Cell> {
+    public class BoardIterator implements Iterator<RenderableCell> {
 
         private int nextAutomatonIndex = 1;
         private Iterator<pl.maxmati.po.automaton.Cell> iterator;
         private final AutomatonsHistory automatons;
         private final CellRendererFactory cellRendererFactory;
+        private RenderableCell renderableCell;
 
         public BoardIterator(AutomatonsHistory automatons) {
             this.automatons = automatons;
@@ -115,36 +116,43 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Ce
         }
 
         @Override
-        public Cell next() {
-            pl.maxmati.po.automaton.Cell cell;
-            if(iterator.hasNext())
+        public RenderableCell next() {
+            Cell cell;
+            if (iterator.hasNext())
                 cell = iterator.next();
-            else if(hasNext()){
+            else if (hasNext()) {
                 iterator = automatons.get(nextAutomatonIndex++).iterator();
                 cell = iterator.next();
             } else
                 return null;
 
-            Point2D position = getCords(cell.cords);
+            Cords2D position = getCords(cell.cords);
 
-            return new Cell(cellRendererFactory.create(cell.state), position) ;
+            if (this.renderableCell == null)
+                this.renderableCell = new RenderableCell(cellRendererFactory.create(cell.state), position);
+            else {
+                this.renderableCell.setRenderer(cellRendererFactory.create(cell.state));
+                this.renderableCell.setPosition(position);
+            }
+
+            return this.renderableCell;
         }
 
-        private Point2D getCords(CellCoordinates cords) {
-            Point2D position;
+        private Cords2D getCords(CellCoordinates cords) {
+            Cords2D position;
             if(cords instanceof Cords1D)
-                position = new Point2D( ((Cords1D)cords).x, nextAutomatonIndex - 1);
+                position = new Cords2D( ((Cords1D)cords).x, nextAutomatonIndex - 1);
             else
-                position = new Point2D( ((Cords2D)cords).x, ((Cords2D)cords).y);
+                position = (Cords2D) cords;
             return position;
         }
     }
 
-    public static class Cell {
-        private final CellRenderer renderer;
-        private final Point2D position;
+    public static class RenderableCell {
+        private CellRenderer renderer;
+        private Cords2D position;
 
-        public Cell(CellRenderer renderer, Point2D position) {
+        public RenderableCell(CellRenderer renderer, Cords2D position) {
             this.renderer = renderer;
             this.position = position;
         }
@@ -153,8 +161,16 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Ce
             return renderer;
         }
 
-        public Point2D getPosition() {
+        public Cords2D getPosition() {
             return position;
+        }
+
+        public void setRenderer(CellRenderer renderer) {
+            this.renderer = renderer;
+        }
+
+        public void setPosition(Cords2D position) {
+            this.position = position;
         }
     }
 

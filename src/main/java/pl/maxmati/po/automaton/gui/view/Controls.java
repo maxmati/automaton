@@ -67,7 +67,7 @@ public class Controls {
     }
 
     private Slider createTickRateSlider(Ticker ticker) {
-        Slider tickRateSlider = new Slider(1, 2000, ticker.getRate());
+        Slider tickRateSlider = new Slider(10, 2000, ticker.getRate());
         tickRateSlider.setMajorTickUnit(1);
         tickRateSlider.setBlockIncrement(1);
         tickRateSlider.valueProperty().addListener((observableValue, oldValue, newValue) -> ticker.setRate(newValue.intValue()));
