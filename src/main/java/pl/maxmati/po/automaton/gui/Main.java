@@ -42,7 +42,7 @@ public class Main extends Application {
 
         SplitPane sp = new SplitPane();
 
-        sp.getItems().addAll(board, controls.getRoot());
+        sp.getItems().addAll(board.getRoot(), controls.getRoot());
 
         Scene scene = new Scene(sp);
         primaryStage.setScene(scene);

@@ -1,51 +1,56 @@
 package pl.maxmati.po.automaton.gui.view;
 
 import javafx.application.Platform;
-import javafx.scene.CacheHint;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import pl.maxmati.po.automaton.coordinates.Cords2D;
-import pl.maxmati.po.automaton.gui.commands.InsertStructureCommand;
+import pl.maxmati.po.automaton.gui.commands.FinishInsertingStructureCommand;
 import pl.maxmati.po.automaton.gui.commands.SwitchCellCommand;
 import pl.maxmati.po.automaton.gui.controller.BoardAdapter;
 import pl.maxmati.po.automaton.gui.view.cell.CellRenderer;
-import pl.maxmati.po.automaton.structures.AutomatonStructure;
 
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 /**
  * Created by maxmati on 12/17/15.
  */
-public class Board extends Canvas implements Observer{
+public class Board extends StackPane implements Observer{
+
+    private static final int REDRAWING_RATE_MS = 35;
 
     private final BoardAdapter adapter;
 
     private Timer resizeTimer = new Timer("Board redraw timer");
     private TimerTask resizeTask = null;
+
     private double cellHeight;
     private double cellWidth;
-    private GraphicsContext context;
+
     private boolean dirty = true;
-    private CellRenderer[][] old;
-    private AutomatonStructure insertingStructure = null;
+
+    private Point2D mousePosition = null;
+    private List<BoardAdapter.RenderableCell> insertingStructure = null;
+
+    private CellRenderer[][] cache;
+
+    private Canvas mainLayer = new Canvas();
+    private Canvas insertingLayer = new Canvas();
+    private Canvas borderCanvas = new Canvas();
 
     public Board(BoardAdapter adapter){
-
-        setCache(true);
-        setCacheHint(CacheHint.SPEED);
-
         this.adapter = adapter;
         adapter.addObserver(this);
 
-        old = new CellRenderer[adapter.getWidth()][adapter.getHeight()];
+        initCanvas(mainLayer);
+        initCanvas(insertingLayer);
+        initCanvas(borderCanvas);
 
-        context = this.getGraphicsContext2D();
+        initCache(adapter);
 
         this.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             if(mouseEvent.getButton() == MouseButton.PRIMARY){
@@ -57,27 +62,66 @@ public class Board extends Canvas implements Observer{
 
                 if(insertingStructure == null)
                     adapter.dispatchCommand(new SwitchCellCommand(new Cords2D(x,y)));
-                else
-                    adapter.dispatchCommand(new InsertStructureCommand(insertingStructure, new Cords2D(x, y)));
+                else {
+                    adapter.dispatchCommand(new FinishInsertingStructureCommand(new Cords2D(x, y)));
+                }
             }
         });
 
+        this.addEventHandler(MouseEvent.MOUSE_ENTERED, this::updateMousePosition);
+        this.addEventHandler(MouseEvent.MOUSE_MOVED, this::updateMousePosition);
+        this.addEventHandler(MouseEvent.MOUSE_EXITED, mouseEvent -> mousePosition = null);
+
+
+        startRedrawingTask();
+    }
+
+    private Point2D updateMousePosition(MouseEvent mouseEvent) {
+        return mousePosition = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+    }
+
+    private void startRedrawingTask() {
         TimerTask redrawTask = new TimerTask() {
             @Override
             public void run() {
-                if (dirty) Platform.runLater(() -> draw());
+                Platform.runLater(() -> draw());
             }
         };
-        resizeTimer.scheduleAtFixedRate(redrawTask,35,35);
+        resizeTimer.scheduleAtFixedRate(redrawTask, REDRAWING_RATE_MS, REDRAWING_RATE_MS);
+    }
+
+    private void initCache(BoardAdapter adapter) {
+        cache = new CellRenderer[adapter.getWidth()][adapter.getHeight()];
+    }
+
+    private void initCanvas(Canvas canvas) {
+        this.getChildren().add(canvas);
+        canvas.heightProperty().bind(this.heightProperty());
+        canvas.widthProperty().bind(this.widthProperty());
     }
 
     public void draw(){
-        if(!dirty) return;
+        draw(false);
+    }
 
-        if(old.length != adapter.getWidth() || old[0].length != adapter.getHeight() ) {
-            old = new CellRenderer[adapter.getWidth()][adapter.getHeight()];
-            drawAll();
-            return;
+    public void draw(boolean discardCache){
+        drawInsertingLayer();
+
+        discardCache = drawMainLayer(discardCache);
+
+        if(discardCache)
+            drawBorders();
+
+    }
+
+    private boolean drawMainLayer(boolean discardCache) {
+        if(!dirty) return discardCache;
+
+        GraphicsContext context = mainLayer.getGraphicsContext2D();
+
+        if(cache.length != adapter.getWidth() || cache[0].length != adapter.getHeight() ) {
+            initCache(adapter);
+            discardCache = true;
         }
 
         dirty = false;
@@ -85,83 +129,67 @@ public class Board extends Canvas implements Observer{
         cellHeight = this.getHeight()/adapter.getHeight();
         cellWidth = this.getWidth()/adapter.getWidth();
 
+        for(BoardAdapter.RenderableCell renderableCell : adapter){
+            if(discardCache)
+                drawCell(renderableCell, context, true);
+            else
+                drawCellIfNeeded(renderableCell, context);
+        }
+        return discardCache;
+    }
+
+    private void drawBorders() {
+        GraphicsContext context = borderCanvas.getGraphicsContext2D();
+
+        context.clearRect(0,0,insertingLayer.getWidth(), insertingLayer.getHeight());
+
         context.setStroke(Color.GRAY);
 
-        for(BoardAdapter.RenderableCell renderableCell : adapter){
-            drawCellIfNeeded(renderableCell);
-        }
-
         for (int i = 0; i < adapter.getHeight(); i++) {
-            context.strokeLine(0,cellHeight*i, getWidth(), cellHeight*i);
+            context.strokeLine(0,cellHeight*i, this.getWidth(), cellHeight*i);
         }
 
         for (int i = 0; i < adapter.getWidth(); i++) {
-            context.strokeLine(cellWidth*i, 0, cellWidth*i, getHeight());
+            context.strokeLine(cellWidth*i, 0, cellWidth*i, this.getHeight());
         }
-
     }
 
-    private void drawCellIfNeeded(BoardAdapter.RenderableCell renderableCell) {
+    private void drawInsertingLayer() {
+        GraphicsContext context = insertingLayer.getGraphicsContext2D();
+
+        context.clearRect(0,0,insertingLayer.getWidth(), insertingLayer.getHeight());
+
+        if(insertingStructure != null && mousePosition != null)
+            for(BoardAdapter.RenderableCell cell: insertingStructure)
+                drawCell(moveByMouse(cell), context, false);
+    }
+
+    private BoardAdapter.RenderableCell moveByMouse(BoardAdapter.RenderableCell cell) {
+        Cords2D oldCords = cell.getPosition();
+        Cords2D newCords = new Cords2D(
+                oldCords.x + (int) (mousePosition.getX()/cellWidth),
+                oldCords.y + (int) (mousePosition.getY()/cellHeight)
+        );
+
+        return new BoardAdapter.RenderableCell(cell.getRenderer(), newCords);
+    }
+
+    private void drawCellIfNeeded(BoardAdapter.RenderableCell renderableCell, GraphicsContext context) {
         CellRenderer newRenderer = renderableCell.getRenderer();
-        final int x = renderableCell.getPosition().x;
-        final int y = renderableCell.getPosition().y;
-        final CellRenderer oldRenderer = old[x][y];
+        Cords2D position = renderableCell.getPosition();
+
+        final CellRenderer oldRenderer = cache[position.x][position.y];
         if(newRenderer != oldRenderer) {
-            renderableCell.getRenderer().render(context, renderableCell.getPosition(), cellWidth, cellHeight);
-            old[x][y] = newRenderer;
+            drawCell(renderableCell, context, true);
         }
     }
 
-    public void drawAll(){
-        dirty = false;
-
-        cellHeight = this.getHeight()/adapter.getHeight();
-        cellWidth = this.getWidth()/adapter.getWidth();
-
-        context.setStroke(Color.GRAY);
-
-        for(BoardAdapter.RenderableCell renderableCell : adapter){
-            renderableCell.getRenderer().render(context, renderableCell.getPosition(), cellWidth, cellHeight);
-        }
-
-        for (int i = 0; i < adapter.getHeight(); i++) {
-            context.strokeLine(0,cellHeight*i, getWidth(), cellHeight*i);
-        }
-
-        for (int i = 0; i < adapter.getWidth(); i++) {
-            context.strokeLine(cellWidth*i, 0, cellWidth*i, getHeight());
-        }
-
-    }
-
-    @Override
-    public double minHeight(double width)
-    {
-        return 64;
-    }
-
-    @Override
-    public double maxHeight(double width)
-    {
-        return 10000;
-    }
-
-    @Override
-    public double prefHeight(double width)
-    {
-        return minHeight(width);
-    }
-
-    @Override
-    public double minWidth(double height)
-    {
-        return 0;
-    }
-
-    @Override
-    public double maxWidth(double height)
-    {
-        return 10000;
+    private void drawCell(BoardAdapter.RenderableCell renderableCell, GraphicsContext context, boolean storeCache) {
+        CellRenderer newRenderer = renderableCell.getRenderer();
+        Cords2D position = renderableCell.getPosition();
+        newRenderer.render(context, position, cellWidth, cellHeight);
+        if(storeCache)
+            cache[position.x][position.y] = newRenderer;
     }
 
     @Override
@@ -187,19 +215,26 @@ public class Board extends Canvas implements Observer{
         resizeTask = new TimerTask() {
             @Override
             public void run() {
-                Platform.runLater(() -> drawAll());
+                Platform.runLater(() -> draw(true));
             }
         };
         resizeTimer.schedule( resizeTask, 200);
     }
-
 
     @Override
     public void update(Observable observable, Object o) {
         dirty = true;
     }
 
-    public void startInsertingStructure(AutomatonStructure structure) {
+    public void startInsertingStructure(List<BoardAdapter.RenderableCell> structure) {
         insertingStructure = structure;
+    }
+
+    public StackPane getRoot() {
+        return this;
+    }
+
+    public void stopInsertingStructure() {
+        insertingStructure = null;
     }
 }

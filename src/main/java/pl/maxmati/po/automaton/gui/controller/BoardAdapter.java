@@ -15,8 +15,10 @@ import pl.maxmati.po.automaton.state.CellState;
 import pl.maxmati.po.automaton.structures.AutomatonStructure;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
+import java.util.stream.Collectors;
 
 /**
  * Created by maxmati on 12/17/15.
@@ -26,8 +28,9 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Re
     private int width;
     private AutomatonsHistory automatons;
     private CommandQueue queue;
-    private String automatonName = "Game of Life";//TODO: Remove
-    private Board board = null;//TODO: REMOVE!
+    private String automatonName = "Game of Life";
+    private Board board = null;
+    private AutomatonStructure insertingStructure = null;
 
     public int getHeight(){
         return height;
@@ -106,18 +109,40 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Re
         return automatonName;
     }
 
-    public void startInsertingStructure(AutomatonStructure structure) {//TODO: Remove
-        board.startInsertingStructure(structure);
+    public void startInsertingStructure(AutomatonStructure structure) {
+        this.insertingStructure = structure;
+        final CellRendererFactory cellRendererFactory = CellRendererFactory.createFactory(automatons.getLast());
+
+        List<RenderableCell> renderableStructure = structure.getData().entrySet().stream()
+                .map(entry -> new RenderableCell(
+                        cellRendererFactory.create(entry.getValue()),
+                        (Cords2D) entry.getKey())
+                )
+                .collect(Collectors.toList());
+
+        board.startInsertingStructure(renderableStructure);
     }
 
-    public void setBoard(Board board) {//TODO: Remove
+    public void finishInsertingStructure(Cords2D position) {
+        Map<CellCoordinates, CellState> data = insertingStructure.getData().entrySet().stream().collect(Collectors.toMap(
+            (e) ->{
+                Cords2D old = (Cords2D) e.getKey();
+                return new Cords2D(old.x + position.x, old.y + position.y);
+            },
+            Map.Entry::getValue
+        ));
+        automatons.getLast().insertStructure(data);
+        setChanged();
+        notifyObservers();
+    }
+
+    public void setBoard(Board board) {
         this.board = board;
     }
 
-    public void insertStructure(Map<CellCoordinates, CellState> structure) {
-        automatons.getLast().insertStructure(structure);
-        setChanged();
-        notifyObservers();
+    public void cancelInsertingStructure() {
+        board.stopInsertingStructure();
+        insertingStructure = null;
     }
 
     public class BoardIterator implements Iterator<RenderableCell> {
