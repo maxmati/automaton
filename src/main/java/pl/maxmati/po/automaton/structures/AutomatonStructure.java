@@ -11,7 +11,7 @@ import java.util.Map;
 public class AutomatonStructure {
     private final String path;
     private final String name;
-    private Map<? extends  CellCoordinates, ? extends CellState> data = null;
+    private Map<CellCoordinates, CellState> data = null;
     private boolean loaded = false;
 
     public AutomatonStructure(String name, String path) {
@@ -23,7 +23,7 @@ public class AutomatonStructure {
         return name;
     }
 
-    public Map<? extends  CellCoordinates, ? extends CellState> getData() {
+    public Map<CellCoordinates, CellState> getData() {
         if (!loaded) load();
         return data;
     }
@@ -31,5 +31,10 @@ public class AutomatonStructure {
     private void load() {
         data = StructureLoader.loadStructure(path);
         loaded = true;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

@@ -1,16 +1,21 @@
 package pl.maxmati.po.automaton.gui.view;
 
+import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import pl.maxmati.po.automaton.gui.commands.CreateAutomatonCommand;
+import pl.maxmati.po.automaton.gui.commands.StartInsertingStructureCommand;
 import pl.maxmati.po.automaton.gui.commands.TickCommand;
 import pl.maxmati.po.automaton.gui.controller.BoardAdapter;
 import pl.maxmati.po.automaton.gui.controller.Ticker;
+import pl.maxmati.po.automaton.structures.AutomatonStructure;
+import pl.maxmati.po.automaton.structures.StructureLoader;
 
 import java.util.Map;
 import java.util.Optional;
@@ -25,6 +30,8 @@ public class Controls {
     private static final String AUTO_TICK_STOP_LABEL = "Stop";
     private static final String CREATE_NEW_AUTOMATON_LABEL = "Create new Automaton";
     private static final String TICK_RATE_LABEL = "Tick rate";
+    private static final String INSERT_BUTTON_LABEL = "Insert";
+    private String currentAutomatonName;
 
     VBox root = new VBox();
 
@@ -44,12 +51,41 @@ public class Controls {
 
         });
 
-        root.getChildren().addAll(tickSection, createAutomatonButton);
+        HBox insertStructureSection = new HBox();
+        currentAutomatonName = adapter.getAutomatonName();
+        ComboBox<AutomatonStructure> structureSelectionComboBox = new ComboBox<>();
+        updateStructureSelectionCombobox(structureSelectionComboBox);
+
+        adapter.addObserver((o, arg) -> {
+            if(currentAutomatonName.equals(adapter.getAutomatonName())) return;
+
+            currentAutomatonName = adapter.getAutomatonName();
+            updateStructureSelectionCombobox(structureSelectionComboBox);
+        });
+
+        Button insertStructureButton = new Button(INSERT_BUTTON_LABEL);
+
+        insertStructureButton.setOnAction(actionEvent -> {
+            AutomatonStructure selectedStructure = structureSelectionComboBox.getValue();
+            adapter.dispatchCommand(new StartInsertingStructureCommand(selectedStructure));
+        });
+
+
+        insertStructureSection.getChildren().addAll(structureSelectionComboBox, insertStructureButton);
+
+        root.getChildren().addAll(tickSection, createAutomatonButton, insertStructureSection);
 
         root.setAlignment(Pos.TOP_CENTER);
         root.setMinWidth(340);
         root.setMaxWidth(400);
         root.setSpacing(10);
+    }
+
+    private void updateStructureSelectionCombobox(ComboBox<AutomatonStructure> structureSelectionComboBox) {
+        structureSelectionComboBox.setItems(
+                FXCollections.observableArrayList(
+                    StructureLoader.getAvailableStructures(currentAutomatonName)
+                ));
     }
 
     public Node getRoot() {

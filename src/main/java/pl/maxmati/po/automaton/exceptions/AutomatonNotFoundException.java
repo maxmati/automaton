@@ -14,6 +14,6 @@ public class AutomatonNotFoundException extends AutomatonException {
     }
 
     private static String getMessage(String name) {
-        return "Unable to found automaton: " + name;
+        return "Unable to find automaton: " + name;
     }
 }

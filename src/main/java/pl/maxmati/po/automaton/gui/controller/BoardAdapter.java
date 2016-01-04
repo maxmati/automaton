@@ -8,8 +8,11 @@ import pl.maxmati.po.automaton.coordinates.CellCoordinates;
 import pl.maxmati.po.automaton.coordinates.Cords1D;
 import pl.maxmati.po.automaton.coordinates.Cords2D;
 import pl.maxmati.po.automaton.gui.commands.BoardAdapterCommand;
+import pl.maxmati.po.automaton.gui.view.Board;
 import pl.maxmati.po.automaton.gui.view.cell.CellRenderer;
 import pl.maxmati.po.automaton.gui.view.cell.factiories.CellRendererFactory;
+import pl.maxmati.po.automaton.state.CellState;
+import pl.maxmati.po.automaton.structures.AutomatonStructure;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -23,6 +26,8 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Re
     private int width;
     private AutomatonsHistory automatons;
     private CommandQueue queue;
+    private String automatonName = "Game of Life";//TODO: Remove
+    private Board board = null;//TODO: REMOVE!
 
     public int getHeight(){
         return height;
@@ -70,8 +75,9 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Re
         notifyObservers();
     }
 
-    public void createAutomaton(String type, Map<String, Object> params) {
-        Automaton automaton = AutomatonFactory.createAutomaton(type, params);
+    public void createAutomaton(String name, Map<String, Object> params) {
+        automatonName = name;
+        Automaton automaton = AutomatonFactory.createAutomaton(name, params);
         width = (Integer) params.get("Width");
         height = (Integer) params.get("Height");
 
@@ -94,6 +100,24 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Re
             automatons.add(automaton.createNewEmpty());
         }
         automatons.add(automaton);
+    }
+
+    public String getAutomatonName() {
+        return automatonName;
+    }
+
+    public void startInsertingStructure(AutomatonStructure structure) {//TODO: Remove
+        board.startInsertingStructure(structure);
+    }
+
+    public void setBoard(Board board) {//TODO: Remove
+        this.board = board;
+    }
+
+    public void insertStructure(Map<CellCoordinates, CellState> structure) {
+        automatons.getLast().insertStructure(structure);
+        setChanged();
+        notifyObservers();
     }
 
     public class BoardIterator implements Iterator<RenderableCell> {

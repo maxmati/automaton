@@ -8,9 +8,11 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import pl.maxmati.po.automaton.coordinates.Cords2D;
+import pl.maxmati.po.automaton.gui.commands.InsertStructureCommand;
 import pl.maxmati.po.automaton.gui.commands.SwitchCellCommand;
 import pl.maxmati.po.automaton.gui.controller.BoardAdapter;
 import pl.maxmati.po.automaton.gui.view.cell.CellRenderer;
+import pl.maxmati.po.automaton.structures.AutomatonStructure;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -31,6 +33,7 @@ public class Board extends Canvas implements Observer{
     private GraphicsContext context;
     private boolean dirty = true;
     private CellRenderer[][] old;
+    private AutomatonStructure insertingStructure = null;
 
     public Board(BoardAdapter adapter){
 
@@ -52,7 +55,10 @@ public class Board extends Canvas implements Observer{
                 final int x = (int) (mouseEvent.getX() / cellWidth);
                 final int y = (int) (mouseEvent.getY() / cellHeight);
 
-                adapter.dispatchCommand(new SwitchCellCommand(new Cords2D(x,y)));
+                if(insertingStructure == null)
+                    adapter.dispatchCommand(new SwitchCellCommand(new Cords2D(x,y)));
+                else
+                    adapter.dispatchCommand(new InsertStructureCommand(insertingStructure, new Cords2D(x, y)));
             }
         });
 
@@ -191,5 +197,9 @@ public class Board extends Canvas implements Observer{
     @Override
     public void update(Observable observable, Object o) {
         dirty = true;
+    }
+
+    public void startInsertingStructure(AutomatonStructure structure) {
+        insertingStructure = structure;
     }
 }

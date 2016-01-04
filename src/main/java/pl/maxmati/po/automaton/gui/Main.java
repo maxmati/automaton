@@ -15,7 +15,6 @@ import pl.maxmati.po.automaton.gui.controller.CommandQueue;
 import pl.maxmati.po.automaton.gui.controller.Ticker;
 import pl.maxmati.po.automaton.gui.view.Board;
 import pl.maxmati.po.automaton.gui.view.Controls;
-import pl.maxmati.po.automaton.structures.StructureLoader;
 
 public class Main extends Application {
 
@@ -37,7 +36,7 @@ public class Main extends Application {
             System.exit(0);
         });
 
-        StructureLoader.getAvailableStructures("Game of Life").get(0).getData();
+        adapter.setBoard(board);//TODO: Remove
 
         primaryStage.setTitle(TITLE);
 
