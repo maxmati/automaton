@@ -31,7 +31,7 @@ public abstract class Automaton2Dim extends Automaton {
     }
 
     @Override
-    protected CellCoordinates initialCoordinates(CellCoordinates coordinates) {
+    protected CellCoordinates initialCoordinates() {
         return new Cords2D(-1,0);
     }
 

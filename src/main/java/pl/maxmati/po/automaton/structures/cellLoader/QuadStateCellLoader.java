@@ -9,6 +9,6 @@ import pl.maxmati.po.automaton.state.QuadState;
 public class QuadStateCellLoader implements CellLoader {
     @Override
     public CellState getCell(String next) {
-        return QuadState.valueOf(Integer.valueOf(next));
+        return QuadState.valueOf(Integer.parseInt(next));
     }
 }

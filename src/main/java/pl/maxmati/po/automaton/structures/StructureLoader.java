@@ -42,8 +42,8 @@ public class StructureLoader {
 
         List<AutomatonStructure> structures = new ArrayList<>();
 
-        BufferedReader infoFileReader = new BufferedReader(new InputStreamReader(infoFileStream));
-        try {
+
+        try(BufferedReader infoFileReader = new BufferedReader(new InputStreamReader(infoFileStream))) {
             String line;
             while (( line = infoFileReader.readLine()) != null){
                 String data[] = line.split(" ");

@@ -55,7 +55,7 @@ public abstract class Automaton implements Iterable<Cell>{
 
     protected abstract Automaton newInstance(CellStateFactory stateFactory, CellNeighborhood neighborhood);
     protected abstract boolean hasNextCoordinates(CellCoordinates coordinates);
-    protected abstract CellCoordinates initialCoordinates(@SuppressWarnings("UnusedParameters") CellCoordinates coordinates);
+    protected abstract CellCoordinates initialCoordinates();
     protected abstract CellCoordinates nextCoordinates(CellCoordinates coordinates);
     protected abstract CellState newCellState(Cell currentState, Set<Cell> neighborsStates);
     protected abstract String stringifyCells();
@@ -102,7 +102,7 @@ public abstract class Automaton implements Iterable<Cell>{
         private CellCoordinates currentState;
 
         private CellIterator() {
-            currentState = Automaton.this.initialCoordinates(currentState);
+            currentState = Automaton.this.initialCoordinates();
         }
 
         @Override

@@ -46,7 +46,7 @@ public class Automaton1Dim extends Automaton {
     }
 
     @Override
-    protected CellCoordinates initialCoordinates(@SuppressWarnings("UnusedParameters") CellCoordinates coordinates) {
+    protected CellCoordinates initialCoordinates() {
         return new Cords1D(-1);
     }
 

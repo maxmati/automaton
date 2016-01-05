@@ -15,8 +15,8 @@ import java.util.*;
  */
 public class QuadLife extends Automaton2Dim {
 
-    public static final Set<Integer> survive = new HashSet<>(Arrays.asList(2, 3));
-    public static final Set<Integer> born = new HashSet<>(Collections.singletonList(3));
+    private static final Set<Integer> survive = new HashSet<>(Arrays.asList(2, 3));
+    private static final Set<Integer> born = new HashSet<>(Collections.singletonList(3));
 
     public QuadLife(int width, int height){
         this(width, height, false);

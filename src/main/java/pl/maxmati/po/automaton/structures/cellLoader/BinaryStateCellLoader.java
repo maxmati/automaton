@@ -10,6 +10,6 @@ public class BinaryStateCellLoader implements CellLoader {
 
     @Override
     public CellState getCell(String next) {
-        return BinaryState.valueOf(Integer.valueOf(next));
+        return BinaryState.valueOf(Integer.parseInt(next));
     }
 }

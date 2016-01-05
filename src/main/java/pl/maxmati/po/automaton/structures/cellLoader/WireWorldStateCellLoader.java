@@ -9,6 +9,6 @@ import pl.maxmati.po.automaton.state.WireWorldState;
 public class WireWorldStateCellLoader implements CellLoader {
     @Override
     public CellState getCell(String state) {
-        return WireWorldState.valueOf(Integer.valueOf(state));
+        return WireWorldState.valueOf(Integer.parseInt(state));
     }
 }

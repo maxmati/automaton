@@ -49,7 +49,7 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Re
     }
 
     @Override
-    public Iterator<RenderableCell> iterator() {
+    public synchronized Iterator<RenderableCell> iterator() {
         return new BoardIterator(automatons);
     }
 
@@ -145,7 +145,7 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Re
         insertingStructure = null;
     }
 
-    public class BoardIterator implements Iterator<RenderableCell> {
+    public static class BoardIterator implements Iterator<RenderableCell> {
 
         private int nextAutomatonIndex = 1;
         private Iterator<pl.maxmati.po.automaton.Cell> iterator;

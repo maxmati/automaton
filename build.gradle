@@ -4,7 +4,9 @@ version '1.0-SNAPSHOT'
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'jacoco'
+apply plugin: 'findbugs'
 
+//noinspection GroovyUnusedAssignment
 mainClassName = "pl.maxmati.po.automaton.gui.Main"
 
 repositories {

@@ -97,7 +97,7 @@ public class CreateAutomatonDialog {
             textField.setText(entry.getValue().toString());
             return textField;
         } else if(entry.getValue() instanceof Automaton1Dim.Rule) {
-            return createSpinner(0, 255, Integer.valueOf(entry.getValue().toString()));
+            return createSpinner(0, 255, Integer.parseInt(entry.getValue().toString()));
         }
         return null;
     }
