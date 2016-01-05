@@ -2,6 +2,10 @@ group 'pl.maxmati.po'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'jacoco'
+
+mainClassName = "pl.maxmati.po.automaton.gui.Main"
 
 repositories {
     mavenCentral()
