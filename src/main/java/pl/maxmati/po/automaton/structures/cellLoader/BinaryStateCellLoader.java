@@ -1,4 +1,4 @@
-package pl.maxmati.po.automaton.structures;
+package pl.maxmati.po.automaton.structures.cellLoader;
 
 import pl.maxmati.po.automaton.state.BinaryState;
 import pl.maxmati.po.automaton.state.CellState;

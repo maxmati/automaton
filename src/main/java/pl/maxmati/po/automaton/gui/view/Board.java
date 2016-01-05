@@ -46,6 +46,8 @@ public class Board extends StackPane implements Observer{
         this.adapter = adapter;
         adapter.addObserver(this);
 
+        setMinSize(0, 0);
+
         initCanvas(mainLayer);
         initCanvas(insertingLayer);
         initCanvas(borderCanvas);

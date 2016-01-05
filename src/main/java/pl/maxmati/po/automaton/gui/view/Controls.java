@@ -18,6 +18,7 @@ import pl.maxmati.po.automaton.gui.controller.Ticker;
 import pl.maxmati.po.automaton.structures.AutomatonStructure;
 import pl.maxmati.po.automaton.structures.StructureLoader;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -87,10 +88,12 @@ public class Controls {
             }
             else {
                 AutomatonStructure selectedStructure = structureSelectionComboBox.getValue();
+                if(selectedStructure == null) return;
                 adapter.dispatchCommand(new StartInsertingStructureCommand(selectedStructure));
                 insertingStructure = true;
                 insertStructureButton.textProperty().setValue(INSET_BUTTON_DONE_LABEL);
             }
+            structureSelectionComboBox.disableProperty().setValue(insertingStructure);
         });
         return insertStructureButton;
     }
@@ -110,10 +113,13 @@ public class Controls {
     }
 
     private void updateStructureSelectionCombobox(ComboBox<AutomatonStructure> structureSelectionComboBox) {
+        final List<AutomatonStructure> availableStructures = StructureLoader.getAvailableStructures(currentAutomatonName);
         structureSelectionComboBox.setItems(
                 FXCollections.observableArrayList(
-                    StructureLoader.getAvailableStructures(currentAutomatonName)
+                        availableStructures
                 ));
+        if(availableStructures.size() > 0)
+            structureSelectionComboBox.setValue(availableStructures.get(0));
     }
 
     public Node getRoot() {

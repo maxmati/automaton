@@ -5,6 +5,10 @@ import pl.maxmati.po.automaton.exceptions.AutomatonNotFoundException;
 import pl.maxmati.po.automaton.exceptions.UnsupportedCellLoader;
 import pl.maxmati.po.automaton.exceptions.UnsupportedCordsLoader;
 import pl.maxmati.po.automaton.state.CellState;
+import pl.maxmati.po.automaton.structures.cellLoader.BinaryStateCellLoader;
+import pl.maxmati.po.automaton.structures.cellLoader.CellLoader;
+import pl.maxmati.po.automaton.structures.cellLoader.QuadStateCellLoader;
+import pl.maxmati.po.automaton.structures.cellLoader.WireWorldStateCellLoader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,6 +24,10 @@ public class StructureLoader {
 
     static {
         automatonFolderMap.put("Game of Life", "gol");
+        automatonFolderMap.put("Wire World", "wire_world");
+        automatonFolderMap.put("Langton Ant", "langton_ant");
+        automatonFolderMap.put("Quad Life", "quad_life");
+        automatonFolderMap.put("Single dimension Automaton", "1dim");
     }
 
     public static List<AutomatonStructure> getAvailableStructures(String automatonName){
@@ -73,7 +81,10 @@ public class StructureLoader {
     private static CellLoader createCellLoader(String cellType) {
         if(cellType.equals("BinaryState"))
             return new BinaryStateCellLoader();
-
+        if(cellType.equals("WireWorldState"))
+            return new WireWorldStateCellLoader();
+        if(cellType.equals("QuadState"))
+            return new QuadStateCellLoader();
         throw new UnsupportedCellLoader(cellType);
     }
 

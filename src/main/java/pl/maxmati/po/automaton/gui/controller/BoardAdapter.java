@@ -59,7 +59,7 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Re
         queue.processCommands();//TODO: REMOVE ASYNC
     }
 
-    public void switchCell(Cords2D cords) {
+    public synchronized void switchCell(Cords2D cords) {
         Automaton automaton = automatons.getLast();
         if (automaton instanceof Automaton1Dim) {
             if (cords.y != automatons.size() - 1)
@@ -72,13 +72,13 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Re
         notifyObservers();
     }
 
-    public void tickAutomaton() {
+    public synchronized void tickAutomaton() {
         automatons.add(automatons.getLast().nextState());
         setChanged();
         notifyObservers();
     }
 
-    public void createAutomaton(String name, Map<String, Object> params) {
+    public synchronized void createAutomaton(String name, Map<String, Object> params) {
         automatonName = name;
         Automaton automaton = AutomatonFactory.createAutomaton(name, params);
         width = (Integer) params.get("Width");
@@ -123,7 +123,7 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Re
         board.startInsertingStructure(renderableStructure);
     }
 
-    public void finishInsertingStructure(Cords2D position) {
+    public synchronized void finishInsertingStructure(Cords2D position) {
         Map<CellCoordinates, CellState> data = insertingStructure.getData().entrySet().stream().collect(Collectors.toMap(
             (e) ->{
                 Cords2D old = (Cords2D) e.getKey();
