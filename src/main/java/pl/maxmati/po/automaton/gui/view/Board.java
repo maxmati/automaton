@@ -21,7 +21,7 @@ import java.util.*;
  */
 public class Board extends StackPane implements Observer{
 
-    private static final int REDRAWING_RATE_MS = 35;
+    private static final int REDRAWING_RATE_MS = 16;//~60FPS
 
     private final BoardAdapter adapter;
 
