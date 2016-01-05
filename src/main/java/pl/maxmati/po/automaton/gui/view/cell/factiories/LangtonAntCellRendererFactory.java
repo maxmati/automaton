@@ -26,7 +26,7 @@ public class LangtonAntCellRendererFactory extends CellRendererFactory {
             renderers.get(bs).put(null, backgroundRenderer);
             for (LangtonAntState as: LangtonAntState.values()){
                 int rotationAngle = getRotationAngle(as);
-                renderers.get(bs).put(as, new AntCellRenderer(backgroundRenderer, rotationAngle));
+                renderers.get(bs).put(as, new AntCellRenderer(backgroundRenderer, rotationAngle, bs == BinaryState.ALIVE));
             }
         }
 

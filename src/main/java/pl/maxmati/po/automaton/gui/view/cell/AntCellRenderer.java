@@ -9,19 +9,23 @@ import pl.maxmati.po.automaton.coordinates.Cords2D;
  * Created by maxmati on 12/30/15.
  */
 public class AntCellRenderer implements CellRenderer {
-    Image ant = new Image("img/ant.png");
-    CellRenderer backgroundRender;
-    int rotateAngle;
+    final Image ant;
+    final CellRenderer backgroundRender;
+    final int rotateAngle;
 
-    public AntCellRenderer(CellRenderer backgroundRender, int rotateAngle) {
+    public AntCellRenderer(CellRenderer backgroundRender, int rotateAngle, boolean whiteAnt) {
         this.backgroundRender = backgroundRender;
         this.rotateAngle = rotateAngle;
+        if(whiteAnt)
+            ant = new Image("img/antw.png");
+        else
+            ant = new Image("img/ant.png");
     }
 
     @Override
     public void render(GraphicsContext context, Cords2D position, double width, double height) {
         final double x = position.x * width;
-        final double y = position.x * height;
+        final double y = position.y * height;
         backgroundRender.render(context, position, width, height);
 
         if(rotateAngle == 90 || rotateAngle == 270){
