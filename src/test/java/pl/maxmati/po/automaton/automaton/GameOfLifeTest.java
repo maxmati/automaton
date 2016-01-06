@@ -87,7 +87,7 @@ public class GameOfLifeTest {
     };
 
     @Test public void testB3678S34678Rule(){
-        Automaton a = new GameOfLife(6, 4, false, new GameOfLife.Rule("3678/34678"));
+        Automaton a = new GameOfLife(6, 4, false, new GameOfLife.Rule("34678/3678"));
         a.insertStructure(generateBinaryStateStruct(B3678S34678RULE_TESTDATA[0]));
 
         a = a.nextState();

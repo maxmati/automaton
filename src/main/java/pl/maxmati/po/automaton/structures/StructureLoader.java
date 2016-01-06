@@ -9,6 +9,8 @@ import pl.maxmati.po.automaton.structures.cellLoader.BinaryStateCellLoader;
 import pl.maxmati.po.automaton.structures.cellLoader.CellLoader;
 import pl.maxmati.po.automaton.structures.cellLoader.QuadStateCellLoader;
 import pl.maxmati.po.automaton.structures.cellLoader.WireWorldStateCellLoader;
+import pl.maxmati.po.automaton.structures.cordsLoader.Cords2DLoader;
+import pl.maxmati.po.automaton.structures.cordsLoader.CordsLoader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,7 +19,12 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 /**
- * Created by maxmati on 1/4/16.
+ * @author maxmati
+ * @version 1.0
+ * <br>
+ *
+ * Static class which works as factory for {@link AutomatonStructure}s.
+ *
  */
 public class StructureLoader {
     private static Map<String, String> automatonFolderMap = new HashMap<>();
@@ -30,6 +37,13 @@ public class StructureLoader {
         automatonFolderMap.put("Single dimension Automaton", "1dim");
     }
 
+    /**
+     * Gets list of available structures for specified automaton.
+     * Actual structure data is loaded at first access to it.
+     *
+     * @param automatonName Name of Automaton.
+     * @return List of {@link AutomatonStructure} compatible with given Automaton
+     */
     public static List<AutomatonStructure> getAvailableStructures(String automatonName){
         String automatonDirectoryName = automatonFolderMap.get(automatonName);
         if(automatonDirectoryName == null)

@@ -8,25 +8,44 @@ import pl.maxmati.po.automaton.exceptions.NotSupportedCellCoordinates;
 import java.util.HashSet;
 import java.util.Set;
 
-
 /**
- * Created by maxmati on 12/7/15.
+ * @author maxmati
+ * @version 1.0
+ * <br>
+ *
+ * Calculate neighbours in single dimension with specified radius and possibly with wrapping.
+ *
  */
 public class SingleDimensionNeighborhood implements CellNeighborhood{
     private final int radius;
     private boolean wrap = false;
     private Integer width = null;
 
+    /**
+     * Creates instance which calculate neighbors with specified radius and without wrapping
+     * @param radius Radius of neighborhood
+     */
+    public SingleDimensionNeighborhood(int radius) {
+        this.radius = radius;
+    }
+
+    /**
+     * Creates instance which calculate neighbors with specified radius and with specified wrapping
+     * @param radius Radius of neighborhood
+     * @param wrap Defines if should wrap board.
+     * @param width Width of the board. Required for wrapping.
+     */
     public SingleDimensionNeighborhood(int radius, boolean wrap, Integer width) {
         this(radius);
         this.wrap = wrap;
         this.width = width;
     }
 
-    public SingleDimensionNeighborhood(int radius) {
-        this.radius = radius;
-    }
-
+    /**
+     * Supports only {@link Cords1D}
+     *
+     * @see CellNeighborhood#cellNeighbors(CellCoordinates)
+     */
     @Override
     public Set<CellCoordinates> cellNeighbors(CellCoordinates cell) {
         if(!(cell instanceof Cords1D))

@@ -1,13 +1,19 @@
 package pl.maxmati.po.automaton.state;
 
 /**
- * Created by maxmati on 11/20/15
+ * @author maxmati
+ * @version 1.0
+ * <br>
+ * Concrete implementation of {@link CellState} for {@link pl.maxmati.po.automaton.automaton.GameOfLife}.
  */
 public enum BinaryState implements CellState {
     DEAD, ALIVE;
 
     private static BinaryState[] vals = values();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CellState next(){
         return vals[(this.ordinal() + 1) % vals.length];

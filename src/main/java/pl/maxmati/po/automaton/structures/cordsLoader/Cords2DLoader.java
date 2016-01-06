@@ -1,4 +1,4 @@
-package pl.maxmati.po.automaton.structures;
+package pl.maxmati.po.automaton.structures.cordsLoader;
 
 import pl.maxmati.po.automaton.coordinates.CellCoordinates;
 import pl.maxmati.po.automaton.coordinates.Cords2D;

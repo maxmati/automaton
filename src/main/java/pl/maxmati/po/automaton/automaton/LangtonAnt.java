@@ -16,35 +16,58 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by maxmati on 11/23/15.
+ * @author maxmati
+ * @version 1.0
+ * <br>
+ *
+ * Implementation of Langton Automaton.
+ *
  */
 public class LangtonAnt extends Automaton2Dim {
-
     final boolean wrap;
 
+    /**
+     * Creates Automaton with specified width and without wrapping.
+     *
+     * @param width Width of Automaton
+     * @param height Height of Automaton
+     */
     public LangtonAnt(int width, int height){
         this(width, height, false);
     }
 
+    /**
+     * Creates Automaton with specified width and wrapping.
+     *
+     * @param width Width of Automaton
+     * @param height Height of Automaton
+     * @param wrap True if should wrap board, false otherwise.
+     */
     public LangtonAnt(int width, int height, boolean wrap){
         this(new VonNeumanNeighborhood(1, wrap, width, height), new UniformStateFactory(new LangtonCellState(BinaryState.DEAD)), width, height, wrap);
     }
 
-    LangtonAnt(CellNeighborhood neighborhoodStrategy, CellStateFactory stateFactory, int width, int height, boolean wrap) {
+    private LangtonAnt(CellNeighborhood neighborhoodStrategy, CellStateFactory stateFactory, int width, int height, boolean wrap) {
         super(neighborhoodStrategy, stateFactory, width, height);
         this.wrap = wrap;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Automaton newInstance(CellStateFactory stateFactory, CellNeighborhood neighborhood) {
         return new LangtonAnt(neighborhood, stateFactory, width, height, wrap);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    protected CellState newCellState(Cell currentCell, Set<Cell> neighborsCells) {
+    protected CellState newCellState(Cell cell, Set<Cell> neighborsCells) {
         Set<Cell> ants = findAnts(neighborsCells);
-        LangtonCellState currentState = (LangtonCellState) currentCell.state;
-        Cords2D currentCords = (Cords2D) currentCell.cords;
+        LangtonCellState currentState = (LangtonCellState) cell.state;
+        Cords2D currentCords = (Cords2D) cell.cords;
 
         BinaryState newCellState = getNewCellState(currentState);
 
@@ -118,7 +141,7 @@ public class LangtonAnt extends Automaton2Dim {
 
     }
 
-    private static LangtonAntState nextAntState(Cell antCell) {
+    private LangtonAntState nextAntState(Cell antCell) {
         LangtonCellState state = (LangtonCellState) antCell.state;
         BinaryState cellState = state.cellState;
         switch (cellState){

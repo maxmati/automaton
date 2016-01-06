@@ -17,7 +17,12 @@ import pl.maxmati.po.automaton.gui.view.cell.CellRenderer;
 import java.util.*;
 
 /**
- * Created by maxmati on 12/17/15.
+ * @author maxmati
+ * @version 1.0
+ * <br>
+ *
+ * GUI element responsible for rendering {@link pl.maxmati.po.automaton.automaton.Automaton} board.
+ *
  */
 public class Board extends StackPane implements Observer{
 
@@ -42,6 +47,10 @@ public class Board extends StackPane implements Observer{
     private Canvas insertingLayer = new Canvas();
     private Canvas borderCanvas = new Canvas();
 
+    /**
+     * Creates new instance using {@link BoardAdapter} to get data.
+     * @param adapter {@link BoardAdapter} to use
+     */
     public Board(BoardAdapter adapter){
         this.adapter = adapter;
         adapter.addObserver(this);
@@ -78,6 +87,61 @@ public class Board extends StackPane implements Observer{
         startRedrawingTask();
     }
 
+    /**
+     * Begin process of inserting preloaded structure.
+     *
+     * @param structure Structure which will be inserted as list of {@link pl.maxmati.po.automaton.gui.controller.BoardAdapter.RenderableCell}
+     * @see Board#stopInsertingStructure()
+     */
+    public void startInsertingStructure(List<BoardAdapter.RenderableCell> structure) {
+        insertingStructure = structure;
+    }
+
+    /**
+     * Stop process of inserting preloaded structure.
+     *
+     * @see Board#startInsertingStructure(List)
+     */
+    public void stopInsertingStructure() {
+        insertingStructure = null;
+    }
+
+    /**
+     * Should be called when data changed.
+     *
+     * @param observable Ignored.
+     * @param o Ignored.
+     */
+    @Override
+    public void update(Observable observable, Object o) {
+        dirty = true;
+    }
+
+    @Override
+    public boolean isResizable()
+    {
+        return true;
+    }
+
+    @Override
+    public void resize(double width, double height)
+    {
+        super.setWidth(width);
+        super.setHeight(height);
+        dirty = true;
+        startRedrawTask();
+    }
+
+    private void draw(boolean discardCache){
+        drawInsertingLayer();
+
+        discardCache = drawMainLayer(discardCache);
+
+        if(discardCache)
+            drawBorders();
+
+    }
+
     private Point2D updateMousePosition(MouseEvent mouseEvent) {
         return mousePosition = new Point2D(mouseEvent.getX(), mouseEvent.getY());
     }
@@ -86,7 +150,7 @@ public class Board extends StackPane implements Observer{
         TimerTask redrawTask = new TimerTask() {
             @Override
             public void run() {
-                Platform.runLater(() -> draw());
+                Platform.runLater(() -> draw(false));
             }
         };
         resizeTimer.scheduleAtFixedRate(redrawTask, REDRAWING_RATE_MS, REDRAWING_RATE_MS);
@@ -96,24 +160,11 @@ public class Board extends StackPane implements Observer{
         cache = new CellRenderer[adapter.getWidth()][adapter.getHeight()];
     }
 
+
     private void initCanvas(Canvas canvas) {
         this.getChildren().add(canvas);
         canvas.heightProperty().bind(this.heightProperty());
         canvas.widthProperty().bind(this.widthProperty());
-    }
-
-    public void draw(){
-        draw(false);
-    }
-
-    public void draw(boolean discardCache){
-        drawInsertingLayer();
-
-        discardCache = drawMainLayer(discardCache);
-
-        if(discardCache)
-            drawBorders();
-
     }
 
     private boolean drawMainLayer(boolean discardCache) {
@@ -194,21 +245,6 @@ public class Board extends StackPane implements Observer{
             cache[position.x][position.y] = newRenderer;
     }
 
-    @Override
-    public boolean isResizable()
-    {
-        return true;
-    }
-
-    @Override
-    public void resize(double width, double height)
-    {
-        super.setWidth(width);
-        super.setHeight(height);
-        dirty = true;
-        startRedrawTask();
-    }
-
     private void startRedrawTask() {
         if(resizeTask != null){
             resizeTask.cancel();
@@ -223,20 +259,4 @@ public class Board extends StackPane implements Observer{
         resizeTimer.schedule( resizeTask, 200);
     }
 
-    @Override
-    public void update(Observable observable, Object o) {
-        dirty = true;
-    }
-
-    public void startInsertingStructure(List<BoardAdapter.RenderableCell> structure) {
-        insertingStructure = structure;
-    }
-
-    public StackPane getRoot() {
-        return this;
-    }
-
-    public void stopInsertingStructure() {
-        insertingStructure = null;
-    }
 }

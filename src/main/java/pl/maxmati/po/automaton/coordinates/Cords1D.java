@@ -1,7 +1,10 @@
 package pl.maxmati.po.automaton.coordinates;
 
 /**
- * Created by maxmati on 12/7/15.
+ * @author maxmati
+ * @version 1.0
+ * <br>
+ * Concrete implementation of {@link CellCoordinates} for {@link pl.maxmati.po.automaton.automaton.Automaton1Dim}.
  */
 public class Cords1D implements CellCoordinates{
     public final int x;

@@ -1,23 +1,44 @@
 package pl.maxmati.po.automaton.state;
 
 /**
- * Created by maxmati on 11/23/15.
+ * @author maxmati
+ * @version 1.0
+ * <br>
+ * Concrete implementation of {@link CellState} for {@link pl.maxmati.po.automaton.automaton.LangtonAnt}.
  */
 public class LangtonCellState implements CellState {
+    private static int nextAntId = 300;
     public final BinaryState cellState;
     public final Integer antId;
     public final LangtonAntState antState;
 
+    /**
+     * Creates new LangtonCellState without ant.
+     *
+     * @param cellState State of Cell.
+     */
     public LangtonCellState(BinaryState cellState) {
         this(cellState, null, null);
     }
 
+    /**
+     * Creates new LangtonCellState with ant.
+     *
+     * @param cellState State of Cell.
+     * @param antId ID of ant. Null if no ant.
+     * @param antState Rotation of ant. Null if no ant.
+     */
     public LangtonCellState(BinaryState cellState, Integer antId, LangtonAntState antState) {
         this.cellState = cellState;
         this.antId = antId;
         this.antState = antState;
     }
 
+    /**
+     * Creates new LangtonCellState from string.
+     *
+     * @param s String containing LangtonAntCellState
+     */
     public static LangtonCellState fromString(String s) {
         BinaryState state;
         switch (s.charAt(0)){
@@ -55,6 +76,19 @@ public class LangtonCellState implements CellState {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public CellState next() {
+        if(antState == LangtonAntState.WEST)
+            return new LangtonCellState((BinaryState) cellState.next(), antId, null);
+        else if ( antState == null)
+            return new LangtonCellState(cellState, antId == null ? 1 : antId, LangtonAntState.NORTH);
+        else
+            return new LangtonCellState(cellState, antId, LangtonAntState.rotateAntRight(antState));
+    }
+
     @Override
     public String toString() {
         return cellState.toString() + (antId != null ? antId.toString() + antState.toString(): "");
@@ -80,15 +114,5 @@ public class LangtonCellState implements CellState {
         result = 31 * result + (antId != null ? antId.hashCode() : 0);
         result = 31 * result + (antState != null ? antState.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public CellState next() {
-        if(antState == LangtonAntState.WEST)
-            return new LangtonCellState((BinaryState) cellState.next(), antId, null);
-        else if ( antState == null)
-            return new LangtonCellState(cellState, antId == null ? 1 : antId, LangtonAntState.NORTH);
-        else
-            return new LangtonCellState(cellState, antId, antState.next());
     }
 }

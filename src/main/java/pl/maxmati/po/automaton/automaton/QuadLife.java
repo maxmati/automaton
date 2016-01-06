@@ -11,17 +11,34 @@ import pl.maxmati.po.automaton.state.factory.UniformStateFactory;
 import java.util.*;
 
 /**
- * Created by maxmati on 12/7/15.
+ * @author maxmati
+ * @version 1.0
+ * <br>
+ *
+ * Implementation of Quad Life Automaton.
+ *
  */
 public class QuadLife extends Automaton2Dim {
-
     private static final Set<Integer> survive = new HashSet<>(Arrays.asList(2, 3));
     private static final Set<Integer> born = new HashSet<>(Collections.singletonList(3));
 
+    /**
+     * Creates Automaton with specified width and without wrapping.
+     *
+     * @param width Width of Automaton
+     * @param height Height of Automaton
+     */
     public QuadLife(int width, int height){
         this(width, height, false);
     }
 
+    /**
+     * Creates Automaton with specified width and wrapping.
+     *
+     * @param width Width of Automaton
+     * @param height Height of Automaton
+     * @param wrap True if should wrap board, false otherwise.
+     */
     public QuadLife(int width, int height, Boolean wrap){
         this(new MooreNeighborhood(1, wrap, width, height), new UniformStateFactory(QuadState.DEAD), width, height);
     }
@@ -35,19 +52,25 @@ public class QuadLife extends Automaton2Dim {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Automaton newInstance(CellStateFactory stateFactory, CellNeighborhood neighborhood) {
         return new QuadLife(neighborhood, stateFactory, width, height);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    protected CellState newCellState(Cell currentState, Set<Cell> neighborCells) {
+    protected CellState newCellState(Cell cell, Set<Cell> neighborCells) {
         Map<QuadState, Integer> counter =  countStates(neighborCells);
         int aliveCount = counter.get(QuadState.RED) + counter.get(QuadState.GREEN)
                 + counter.get(QuadState.BLUE) + counter.get(QuadState.YELLOW);
 
-        if(QuadState.isAlive(currentState.state) && survive.contains(aliveCount)) {
-            return currentState.state;
+        if(QuadState.isAlive(cell.state) && survive.contains(aliveCount)) {
+            return cell.state;
         } else if(born.contains(aliveCount)){
             return getMajorityOrMissing(counter);
         } else {

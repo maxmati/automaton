@@ -6,7 +6,12 @@ import pl.maxmati.po.automaton.state.CellState;
 import java.util.Map;
 
 /**
- * Created by maxmati on 1/4/16.
+ * @author maxmati
+ * @version 1.0
+ * <br>
+ *
+ * Represents structure which is set of cells.
+ *
  */
 public class AutomatonStructure {
     private final String path;
@@ -14,15 +19,27 @@ public class AutomatonStructure {
     private Map<CellCoordinates, CellState> data = null;
     private boolean loaded = false;
 
-    public AutomatonStructure(String name, String path) {
+    /**
+     * @see StructureLoader
+     */
+
+    AutomatonStructure(String name, String path) {
         this.name = name;
         this.path = path;
     }
 
+    /**
+     * @return Name of structure.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Load structure from file if required and returns it's data.
+     *
+     * @return Map of {@link CellCoordinates} and {@link CellState} of which structure comprises.
+     */
     public Map<CellCoordinates, CellState> getData() {
         if (!loaded) load();
         return data;

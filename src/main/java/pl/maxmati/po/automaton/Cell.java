@@ -4,12 +4,23 @@ import pl.maxmati.po.automaton.coordinates.CellCoordinates;
 import pl.maxmati.po.automaton.state.CellState;
 
 /**
- * Created by maxmati on 11/20/15
+ * @author maxmati
+ * @version 1.0
+ * <br>
+ *
+ * Merge {@link CellState} and {@link CellCoordinates} into complete cell.
+ *
  */
 public class Cell {
     public final CellState state;
     public final CellCoordinates cords;
 
+    /**
+     * Creates new immutable cell.
+     *
+     * @param coordinates Coordinates of cell.
+     * @param state State of cell.
+     */
     public Cell(CellCoordinates coordinates, CellState state) {
         this.state = state;
         this.cords = coordinates;

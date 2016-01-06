@@ -12,14 +12,33 @@ import pl.maxmati.po.automaton.state.factory.UniformStateFactory;
 import java.util.Set;
 
 /**
- * Created by maxmati on 11/22/15
+ * @author maxmati
+ * @version 1.0
+ * <br>
+ *
+ * Implementation of Wire World Automaton.
+ *
  */
 public class WireWorld extends Automaton2Dim {
 
+    /**
+     * Creates Automaton with specified width and without wrapping.
+     *
+     * @param width Width of Automaton
+     * @param height Height of Automaton
+     */
     public WireWorld(int width, int height){
         this(width, height, false);
 
     }
+
+    /**
+     * Creates Automaton with specified width and wrapping.
+     *
+     * @param width Width of Automaton
+     * @param height Height of Automaton
+     * @param wrap True if should wrap board, false otherwise.
+     */
     public WireWorld(Integer width, Integer height, Boolean wrap) {
         this(new MooreNeighborhood(1, wrap, width, height), new UniformStateFactory(WireWorldState.VOID), width, height);
     }
@@ -28,18 +47,23 @@ public class WireWorld extends Automaton2Dim {
         super(neighborhoodStrategy, stateFactory, width, height);
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Automaton newInstance(CellStateFactory stateFactory, CellNeighborhood neighborhood) {
         return new WireWorld(neighborhood, stateFactory, width, height);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    protected CellState newCellState(Cell currentState, Set<Cell> neighborsStates) {
-        if(!(currentState.state instanceof WireWorldState)){
+    protected CellState newCellState(Cell cell, Set<Cell> neighborsStates) {
+        if(!(cell.state instanceof WireWorldState)){
             throw new NotSupportedCellState();
         }
-        WireWorldState state = (WireWorldState) currentState.state;
+        WireWorldState state = (WireWorldState) cell.state;
         switch (state){
             case VOID:
                 return WireWorldState.VOID;

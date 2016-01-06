@@ -25,6 +25,6 @@ public class Automaton1DimFactory extends AutomatonFactory {
 
     @Override
     protected Automaton newAutomaton(Map<String, Object> params) {
-        return new Automaton1Dim( (Integer) params.get("Width"), new Automaton1Dim.Rule((Integer) params.get("Rule")));
+        return new Automaton1Dim( (Integer) params.get("Width"), new Automaton1Dim.Rule((Integer) params.get("Rule")), (Boolean) params.get("Wrap"));
     }
 }

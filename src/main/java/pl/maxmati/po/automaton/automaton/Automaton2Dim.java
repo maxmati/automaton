@@ -8,18 +8,35 @@ import pl.maxmati.po.automaton.neighborhood.CellNeighborhood;
 import pl.maxmati.po.automaton.state.factory.CellStateFactory;
 
 /**
- * Created by maxmati on 11/20/15
+ * @author maxmati
+ * @version 1.0
+ * <br>
+ *
+ * Base for implementation of All 2D Automatons
+ *
  */
 public abstract class Automaton2Dim extends Automaton {
     final int width;
     final int height;
 
-    Automaton2Dim(CellNeighborhood neighborhoodStrategy, CellStateFactory stateFactory, int width, int height) {
+
+    /**
+     * Createts 2D Automaton with specified {@link CellNeighborhood}, {@link CellStateFactory}, width and height
+     *
+     * @param neighborhoodStrategy {@link CellNeighborhood} to use.
+     * @param stateFactory {@link CellStateFactory} to use.
+     * @param width Width of Automaton.
+     * @param height Height of Automaton.
+     */
+    protected Automaton2Dim(CellNeighborhood neighborhoodStrategy, CellStateFactory stateFactory, int width, int height) {
         super(neighborhoodStrategy, stateFactory);
         this.width = width;
         this.height = height;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean hasNextCoordinates(CellCoordinates coordinates) {
         if(coordinates instanceof Cords2D){
@@ -30,11 +47,17 @@ public abstract class Automaton2Dim extends Automaton {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected CellCoordinates initialCoordinates() {
         return new Cords2D(-1,0);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected CellCoordinates nextCoordinates(CellCoordinates coordinates) {
         if(coordinates instanceof Cords2D){
@@ -49,6 +72,9 @@ public abstract class Automaton2Dim extends Automaton {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected String stringifyCells() {
         StringBuilder out = new StringBuilder();
@@ -69,7 +95,7 @@ public abstract class Automaton2Dim extends Automaton {
     }
 
     private boolean areCordsValid(Cords2D cords) {
-        return cords.x < width && cords.y < height;
+        return cords.x >= 0 && cords.x < width && cords.y >= 0 && cords.y < height;
     }
 
     private Cords2D calculateNextCords(Cords2D cords) {
@@ -79,7 +105,6 @@ public abstract class Automaton2Dim extends Automaton {
             x = 0;
             ++y;
         }
-
 
         return new Cords2D(x,y);
     }

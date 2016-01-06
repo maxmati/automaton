@@ -23,7 +23,12 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Created by maxmati on 12/23/15.
+ * @author maxmati
+ * @version 1.0
+ * <br>
+ *
+ * GUI element responsible for rendering all controls for Automaton
+ *
  */
 public class Controls {
 
@@ -40,7 +45,12 @@ public class Controls {
 
     VBox root = new VBox();
 
-
+    /**
+     * Creates new control panel.
+     *
+     * @param adapter {@link BoardAdapter} which is controlled.
+     * @param ticker {@link Ticker} used for automatic ticking.
+     */
     public Controls(BoardAdapter adapter, Ticker ticker) {
         HBox tickSection = createTickControlSection(adapter, ticker);
         Button createAutomatonButton = new Button(CREATE_NEW_AUTOMATON_LABEL);
@@ -64,6 +74,10 @@ public class Controls {
         root.setMinWidth(340);
         root.setMaxWidth(400);
         root.setSpacing(10);
+    }
+
+    public Node getRoot() {
+        return root;
     }
 
     private HBox createInsertStructureSection(BoardAdapter adapter) {
@@ -122,9 +136,6 @@ public class Controls {
             structureSelectionComboBox.setValue(availableStructures.get(0));
     }
 
-    public Node getRoot() {
-        return root;
-    }
 
     private HBox createTickControlSection(BoardAdapter adapter, Ticker ticker) {
         Button tickButton = createTickButton(adapter);

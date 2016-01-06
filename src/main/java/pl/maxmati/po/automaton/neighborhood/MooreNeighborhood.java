@@ -9,7 +9,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by maxmati on 11/20/15
+ * @author maxmati
+ * @version 1.0
+ * <br>
+ *
+ * Calculate neighbours in terms of Moore Neighborhood with specified radius and possibly with wrapping.
+ *
  */
 public class MooreNeighborhood implements CellNeighborhood {
     private final int radius;
@@ -17,10 +22,21 @@ public class MooreNeighborhood implements CellNeighborhood {
     private final int width;
     private final boolean wrap;
 
+    /**
+     * Creates instance which calculate neighbors with specified radius and without wrapping
+     * @param radius Radius of neighborhood
+     */
     public MooreNeighborhood(int radius) {
         this(radius, false, 0, 0);
     }
 
+    /**
+     * Creates instance which calculate neighbors with specified radius and with specified wrapping
+     * @param radius Radius of neighborhood
+     * @param wrap Defines if should wrap board.
+     * @param width Width of the board. Required for wrapping.
+     * @param height Height of the board. Required for wrapping.
+     */
     public MooreNeighborhood(int radius, boolean wrap, int width, int height) {
         this.radius = radius;
         this.wrap = wrap;
@@ -28,6 +44,11 @@ public class MooreNeighborhood implements CellNeighborhood {
         this.height = height;
     }
 
+    /**
+     * Supports only {@link Cords2D}
+     *
+     * @see CellNeighborhood#cellNeighbors(CellCoordinates)
+     */
     @Override
     public Set<CellCoordinates> cellNeighbors(CellCoordinates cell) {
         if(cell instanceof Cords2D){

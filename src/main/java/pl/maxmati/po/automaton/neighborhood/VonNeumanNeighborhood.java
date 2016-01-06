@@ -4,13 +4,17 @@ import pl.maxmati.po.automaton.Utils;
 import pl.maxmati.po.automaton.coordinates.CellCoordinates;
 import pl.maxmati.po.automaton.coordinates.Cords2D;
 import pl.maxmati.po.automaton.exceptions.NotSupportedCellCoordinates;
-import pl.maxmati.po.automaton.neighborhood.CellNeighborhood;
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by maxmati on 11/23/15
+ * @author maxmati
+ * @version 1.0
+ * <br>
+ *
+ * Calculate neighbours in terms of Von Neuman Neighborhood with specified radius and possibly with wrapping.
+ *
  */
 public class VonNeumanNeighborhood implements CellNeighborhood {
     int radius;
@@ -18,6 +22,13 @@ public class VonNeumanNeighborhood implements CellNeighborhood {
     private Integer width = null;
     private Integer height = null;
 
+    /**
+     * Creates instance which calculate neighbors with specified radius and with specified wrapping
+     * @param radius Radius of neighborhood
+     * @param wrap Defines if should wrap board.
+     * @param width Width of the board. Required for wrapping.
+     * @param height Height of the board. Required for wrapping.
+     */
     public VonNeumanNeighborhood(int radius, boolean wrap, Integer width, Integer height) {
         this(radius);
         this.wrap = wrap;
@@ -25,10 +36,19 @@ public class VonNeumanNeighborhood implements CellNeighborhood {
         this.height = height;
     }
 
+    /**
+     * Creates instance which calculate neighbors with specified radius and without wrapping
+     * @param radius Radius of neighborhood
+     */
     public VonNeumanNeighborhood(int radius) {
         this.radius = radius;
     }
 
+    /**
+     * Supports only {@link Cords2D}
+     *
+     * @see CellNeighborhood#cellNeighbors(CellCoordinates)
+     */
     @Override
     public Set<CellCoordinates> cellNeighbors(CellCoordinates cell) {
         if(!(cell instanceof Cords2D))
