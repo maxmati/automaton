@@ -13,7 +13,7 @@ public class Ticker{
     private final Timer timer = new Timer("Ticker-timer");
     private TimerTask task = null;
     private boolean active;
-    private int rate = 10;
+    private int rate = 40;
 
     public Ticker(BoardAdapter adapter) {
         this.adapter = adapter;

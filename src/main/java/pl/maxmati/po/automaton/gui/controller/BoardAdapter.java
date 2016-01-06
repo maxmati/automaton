@@ -49,7 +49,7 @@ public class BoardAdapter extends Observable implements Iterable<BoardAdapter.Re
     }
 
     @Override
-    public synchronized Iterator<RenderableCell> iterator() {
+    public Iterator<RenderableCell> iterator() {
         return new BoardIterator(automatons);
     }
 
